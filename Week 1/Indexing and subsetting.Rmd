@@ -3,33 +3,75 @@ title: "Indexing and subsetting"
 output: html_notebook
 ---
 
-## Subsetting
+# Data and packages
 
-## The pipe operator(s)
-
-Use one of the pipe operators to retrieve only the countries that are EU members (you'll want to use the `subset` function for this)
+You'll want to start by loading the CHES data. We can do this using the `read_dta` function from the haven package. The `.dta` extension indicates that these are Stata-formatted data. We'll also use `as_factor()` to convert some Stata formatted factor variables to a format that works for R, and then we'll simplify our analyses by taking only 2019 data.
 
 ```{r}
 library(haven)
 
 ches<-read_dta('https://www.chesdata.eu/s/1999-2019_CHES_dataset_meansv3-y4tg.dta')
 
-ches|>subset(eumember == 1)
+ches <- as_factor(ches)
 
+ches<-subset(ches, year ==2019)
 
 ```
 
-Use the pipe operator to get the square root of the variance for `lrecon` (which measures the left-right positioning for each party)
+Take a minute to `View()` the data set and see how things are coded.
+
+# The pipe
+
+The pipe will take the object on the left hand side and, by default, treat it as the first argument for whatever is on the right hand side. Here's some code that gets some random numbers and manipulates them without using a pipe:
 
 ```{r}
+set.seed(100)
+# get 100 samples from a normal distribution with mean zero and sd =1 
+x<-rnorm(100)
+# exponentiate it
+x<-exp(x)
+# sort it 
+x<-sort(x)
+# plot the result
+plot(x)
+```
 
-ches$lrecon|>
-  var()|>
-  sqrt()
+Here's how we would do the same set of commands using the pipe:
+
+```{r}
+set.seed(100)
+# get 100 samples from a normal distribution with mean zero and sd =1 
+rnorm(100)|>
+  exp()|>
+  sort()|>
+  plot()
   
+```
+
+Note that the pipe command will default to using the left-hand-side object as the first argument for the right hand side, but you can explicitly reference the left-hand-side variable using the `_`. This is especially useful for functions that don't take "data" as their first argument. One example of this is the `lm()` command:
+
+```{r}
+# This gives an error:
+cars|>
+  lm(speed ~ dist)
+
+
+# this works
+cars|>
+  lm(speed ~ dist , data= _)
 
 
 ```
+
+The `%>%` is a version of the pipe that is associated with the `magrittr` package. This *mostly* works just like the `|>` pipe that is part of base R, but it has some minor differences such as using `.` instead of `_` to reference data. I mentions it here because you might see it in some code (although I've tried to avoid it in my code!)
+
+```{r}
+library(magrittr)
+cars%>%
+  lm(speed ~ dist, data=.)
+```
+
+# Q1
 
 Restate the following operation using a sequence of pipes
 
@@ -47,71 +89,160 @@ chesfam<-sort(chesfam) # sorting from lowest to highest
 
 ```
 
-## Summary statistics
+```{r}
+# type your code here...
+
+```
+
+# Q2
+
+Use one of the pipe operators to retrieve only the countries that are EU members (you'll want to use the `subset` function for this)
+
+```{r}
+# type your code here...
+
+
+
+```
+
+# Q3
+
+Use the pipe operator to get the square root of the variance for `lrecon` (which measures the left-right positioning for each party)
+
+```{r}
+# type your code here...
+
+
+  
+
+
+```
+
+# Subsetting
+
+Remember we have several options for sub-setting data sets. The most basic is by using a logical expression:
+
+```{r}
+ches[which(ches$family=="green"), ]
+
+
+```
+
+We can also use the `subset` function. Note that this function expects a data set as its first argument, and then we can reference columns within that data set without needing to use the `$` notation:
+
+```{r}
+subset(ches, family == "green")
+
+# OR:
+# green_parties |> subset(family=="green")
+```
+
+Another option we'll explore more in the future is the `filter` argument from the dplyr library. The syntax for this is almost identical to the syntax for `subset`, and it also takes a dataset as its first argument:
+
+```{r}
+library(dplyr)
+ches|>filter(family=="green")
+
+
+```
+
+# Q5
+
+Use one of the subsetting operations above to create a subset of the CHES data that only includes parties that recieved at least 10% of the vote in the previous election
+
+```{r}
+
+
+
+```
+
+# Summary statistics
 
 ### Frequency tables
 
 R's `table` command will generate either one or two-dimensional frequency tables.
 
 ```{r}
-table()
+table(ches$family)
 
 ```
 
 In some cases, it may be more useful to examine the percentages in each group, rather than the raw frequencies. You can use the `prop.table` function to generate proportions from an existing table object.
 
 ```{r}
+table_of_families<-table(ches$family)
 
-prop.table()
-
+prop.table(table_of_families)
 ```
 
-#### Cross tabs
+#### Crosstabs
 
 Adding a second categorical variable to the table function will generate a cross tab. The first group will be presented in the rows, and the second group in the columns.
 
 ```{r}
 
-table(x, y)
+table(ches$family, ches$govt)
 
 ```
 
-By default, using the `prop.table` function on a two way table will give us the percentage of observations within each cell. But this isn't always a useful metric. More often, we'll want to use a cross tab to answer a question like "what percentage of people in group X have characteristic Y?" For instance: "what percentage of right wing parties hold seats in their national Parliament?" To answer this question, I'll need to calculate:
+By default, using the `prop.table` function on a two way table will give us the percentage of observations within each cell.
+
+```{r}
+
+table(ches$family, ches$govt)|>prop.table()
+
+```
+
+...But this isn't always a useful metric. More often, we'll want to use a cross tab to answer a question like "what percentage of people in group X have characteristic Y?" For instance: "what percentage of radical right wing parties are in government in 2019?" To answer this question, I'll need to calculate:
 
 $$
-\frac{\text{Number of right wing parties that hold seats}}{\text{Total number of parties that are right wing}}
+\frac{\text{Number of rad right wing parties in government}}{\text{Total number of parties that are rad right wing}}
 $$
 
 To perform that calculation, I'll want to use the margin option so that we calculate proportions along whatever dimension is supposed to make up the denominator. If the total number of right wing parties is showing up in the rows dimension, then I'll use `margin=1` and if the total number is in the columns, I'll use `margin=2`
 
-Use `prop.table` with the margins argument to generate a table that shows this outcome.
+```{r}
+
+govt_parties<-table("family"=ches$family, "in govt?"=ches$govt)
+
+govt_parties
+
+```
+
+# Q6
+
+Use `prop.table` with the margins argument to show the percentage of radical right parties that are in government in 2019:
 
 ```{r}
 
 
 ```
+
+## The Janitor package
+
+There are a number of packages that (ostensibly) help you make nicer looking cross tabs that can be easily exported to a report. Its worth exploring these to see which ones are most useful for you, but one I want to highlight is [the janitor package](https://cran.r-project.org/web/packages/janitor/vignettes/tabyls.html), which allows you to use the `tabyl` command to create tables:
 
 ```{r}
 
 library(janitor)
-humans <- starwars %>%
-  filter(species == "Human")
-t1 <- humans %>%
-  tabyl(eye_color)
 
-t1|>
-  adorn_totals("row")|>
-  adorn_pct_formatting()
+t1 <- tabyl(dat=ches, var1=family, var2=govt)
+
+t1
 
 ```
 
-### 
+On its own, this isn't much to write home about, but it provides a lot of nice options for `adorning` the table with additional statistics:
 
-### Measures of central tendency
+```{r}
 
-### Measures of variance
 
-### Quickly summarizing your data
+t1|>
+  adorn_totals("row")|> # add totals
+  adorn_percentages("row")|> # calculate percentages
+  adorn_pct_formatting() # format percentages
+
+```
 
 ### Making things look nice
 
@@ -125,17 +256,100 @@ Some general tips:
 
 -   **Use a sensible level of precision.** R will give you a figure rounded to the bazillionth digit, but this looks bad in a table or plot, and it can give a misleading impression of how precise your measurements are.
 
-## Aggregation and grouping
+# Aggregation and grouping
 
-### Using dplyr
-
-We'll cover this in more detail later in the term, but [the dplyr](https://dplyr.tidyverse.org/index.html) package provides an extensive tool set and a consistent language for data manipulation over groups. For this reason, we can mostly avoid apply family functions and `aggregate` in the future, but they're still good to be familiar with.
+We can use `aggregate` with the formula syntax to apply a function by group: the \~ is an infix operator, so it takes a LHS and RHS operator. The LHS in this case should be the dependent variable (the outcome you want to measure). The RHS should be the independent variable (the thing you want to group over). So, if we want to get the average level of corruption salience in each country, we can run something like this:
 
 ```{r}
+# x = the formula, FUN= should be a function you want to run for each group
+corruption_salience <- aggregate(x = corrupt_salience ~ country , FUN = mean, data = ches )
+corruption_salience
+
+```
+
+## dplyr method:
+
+There's also a `dplyr` method for this, that may be a little easier to parse. Here, we just use "group by" to declare grouping variable, and then use "summarise" to summarize over members of each group.
+
+```{r}
+library(dplyr) # if you haven't already loaded dplyr
+corruption_salience<-ches|>
+  group_by(country)|>
+  summarise(avg_corruption_salience = mean(corrupt_salience))
+
+corruption_salience
 
 
 ```
 
-## 
+Going forward, we'll mostly use the `dplyr` commands for this class, but knowing `aggregate` can be useful for interpreting other people's code.
 
-## Calculations and functions
+# Q7
+
+Use either the `dplyr` commands or `aggregate` to get each party family's average position on redistribution issues.
+
+```{r}
+# your code here....
+
+
+```
+
+## Functions
+
+Remember that custom functions are just snippets of code that we can re-use. If I have done a calculation once, I can probably write a function to apply it to more general cases.
+
+For instance, here's some code that I could use to get the top parties by vote share:
+
+```{r}
+# this gives row number for the highest to lowest value
+top_n<-order(ches$vote, decreasing=T)[1:10] 
+
+# this subsets the values of party by the index in top_n:
+
+ches$party[top_n]
+
+
+```
+
+I could probably make this more generalized by creating a function.
+
+```{r}
+
+
+topnFunction <- function(labels, values, n){ # the arguments 
+  top_n <- order(values, decreasing= T)[1:n] # the subset
+  result<-labels[top_n] # the result  
+  return(result) # the return statement
+  
+}
+
+```
+
+Now I can use this in a bunch of different scenarios. Maybe I want to get the top parties by seat share instead of vote share, then all I need to do is change the `values` argument:
+
+```{r}
+topnFunction(ches$party, ches$seat, n=10)
+
+
+```
+
+Or I can get more observations by changing `n`
+
+```{r}
+
+topnFunction(ches$party, ches$seat, n=15)
+
+
+
+```
+
+# Q8
+
+How could I modify the function above to return both the party names and the values themselves?
+
+```{r}
+#...your code here
+
+
+
+```
