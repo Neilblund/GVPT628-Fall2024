@@ -1,0 +1,141 @@
+---
+title: "Indexing and subsetting"
+output: html_notebook
+---
+
+## Subsetting
+
+## The pipe operator(s)
+
+Use one of the pipe operators to retrieve only the countries that are EU members (you'll want to use the `subset` function for this)
+
+```{r}
+library(haven)
+
+ches<-read_dta('https://www.chesdata.eu/s/1999-2019_CHES_dataset_meansv3-y4tg.dta')
+
+ches|>subset(eumember == 1)
+
+
+```
+
+Use the pipe operator to get the square root of the variance for `lrecon` (which measures the left-right positioning for each party)
+
+```{r}
+
+ches$lrecon|>
+  var()|>
+  sqrt()
+  
+
+
+```
+
+Restate the following operation using a sequence of pipes
+
+```{r}
+
+chesfam<-subset(ches, select=family) # retrieving only the families column
+
+chesfam<-as_factor(chesfam) # converting to factor
+
+chesfam<-table(chesfam) # creating a frequency table
+
+chesfam<-sort(chesfam) # sorting from lowest to highest
+
+
+
+```
+
+## Summary statistics
+
+### Frequency tables
+
+R's `table` command will generate either one or two-dimensional frequency tables.
+
+```{r}
+table()
+
+```
+
+In some cases, it may be more useful to examine the percentages in each group, rather than the raw frequencies. You can use the `prop.table` function to generate proportions from an existing table object.
+
+```{r}
+
+prop.table()
+
+```
+
+#### Cross tabs
+
+Adding a second categorical variable to the table function will generate a cross tab. The first group will be presented in the rows, and the second group in the columns.
+
+```{r}
+
+table(x, y)
+
+```
+
+By default, using the `prop.table` function on a two way table will give us the percentage of observations within each cell. But this isn't always a useful metric. More often, we'll want to use a cross tab to answer a question like "what percentage of people in group X have characteristic Y?" For instance: "what percentage of right wing parties hold seats in their national Parliament?" To answer this question, I'll need to calculate:
+
+$$
+\frac{\text{Number of right wing parties that hold seats}}{\text{Total number of parties that are right wing}}
+$$
+
+To perform that calculation, I'll want to use the margin option so that we calculate proportions along whatever dimension is supposed to make up the denominator. If the total number of right wing parties is showing up in the rows dimension, then I'll use `margin=1` and if the total number is in the columns, I'll use `margin=2`
+
+Use `prop.table` with the margins argument to generate a table that shows this outcome.
+
+```{r}
+
+
+```
+
+```{r}
+
+library(janitor)
+humans <- starwars %>%
+  filter(species == "Human")
+t1 <- humans %>%
+  tabyl(eye_color)
+
+t1|>
+  adorn_totals("row")|>
+  adorn_pct_formatting()
+
+```
+
+### 
+
+### Measures of central tendency
+
+### Measures of variance
+
+### Quickly summarizing your data
+
+### Making things look nice
+
+Looks matter! When you're exploring data for yourself, it might be okay to ignore aesthetics, but if you want to communicate your results to someone else, its important to keep things readable. The goal of offering a graph or table is to offer a visual summary of your data, and you undermine that goal when you produce unreadable output.
+
+Some general tips:
+
+-   **Look at what you've made.** Ask yourself: "is this readable? Would another person be able to get useful information from this visualization?"
+
+-   **Always give clear labels**. Shorthand is good for coding, but its bad for communicating. e.g.: Don't call it "Pid3cat", call it "Party ID (3-Category)"
+
+-   **Use a sensible level of precision.** R will give you a figure rounded to the bazillionth digit, but this looks bad in a table or plot, and it can give a misleading impression of how precise your measurements are.
+
+## Aggregation and grouping
+
+### Using dplyr
+
+We'll cover this in more detail later in the term, but [the dplyr](https://dplyr.tidyverse.org/index.html) package provides an extensive tool set and a consistent language for data manipulation over groups. For this reason, we can mostly avoid apply family functions and `aggregate` in the future, but they're still good to be familiar with.
+
+```{r}
+
+
+```
+
+## 
+
+## Calculations and functions
