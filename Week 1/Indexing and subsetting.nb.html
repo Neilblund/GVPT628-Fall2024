@@ -1762,6 +1762,20 @@ formatted factor variables to a format that works for R, and then we’ll
 simplify our analyses by taking only 2019 data.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShoYXZlbilcbmBgYCJ9 -->
+<pre class="r"><code>library(haven)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogcGFja2FnZSDigJhoYXZlbuKAmSB3YXMgYnVpbHQgdW5kZXIgUiB2ZXJzaW9uIDQuMy4yXG4ifQ== -->
+<pre><code>Warning: package ‘haven’ was built under R version 4.3.2</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY2hlczwtcmVhZF9kdGEoJ2h0dHBzOi8vd3d3LmNoZXNkYXRhLmV1L3MvMTk5OS0yMDE5X0NIRVNfZGF0YXNldF9tZWFuc3YzLXk0dGcuZHRhJylcblxuY2hlcyA8LSBhc19mYWN0b3IoY2hlcylcblxuY2hlczwtc3Vic2V0KGNoZXMsIHllYXIgPT0yMDE5KVxuXG5gYGAifQ== -->
+<pre class="r"><code>ches&lt;-read_dta(&#39;https://www.chesdata.eu/s/1999-2019_CHES_dataset_meansv3-y4tg.dta&#39;)
+
+ches &lt;- as_factor(ches)
+
+ches&lt;-subset(ches, year ==2019)
+</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>Take a minute to <code>View()</code> the data set and see how things
@@ -1810,6 +1824,17 @@ explicitly reference the left-hand-side variable using the
 <code>lm()</code> command:</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBUaGlzIGdpdmVzIGFuIGVycm9yOlxuY2Fyc3w+XG4gIGxtKHNwZWVkIH4gZGlzdClcblxuXG4jIHRoaXMgd29ya3NcbmNhcnN8PlxuICBsbShzcGVlZCB+IGRpc3QgLCBkYXRhPSBfKVxuXG5cbmBgYCJ9 -->
+<pre class="r"><code># This gives an error:
+cars|&gt;
+  lm(speed ~ dist)
+
+
+# this works
+cars|&gt;
+  lm(speed ~ dist , data= _)
+</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>The <code>%&gt;%</code> is a version of the pipe that is associated
@@ -1820,6 +1845,11 @@ to reference data. I mentions it here because you might see it in some
 code (although I’ve tried to avoid it in my code!)</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShtYWdyaXR0cilcbmNhcnMlPiVcbiAgbG0oc3BlZWQgfiBkaXN0LCBkYXRhPS4pXG5gYGAifQ== -->
+<pre class="r"><code>library(magrittr)
+cars%&gt;%
+  lm(speed ~ dist, data=.)</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 </div>
@@ -1887,6 +1917,10 @@ party)</p>
 basic is by using a logical expression:</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY2hlc1t3aGljaChjaGVzJGZhbWlseT09XCJncmVlblwiKSwgXVxuXG5cbmBgYCJ9 -->
+<pre class="r"><code>ches[which(ches$family==&quot;green&quot;), ]
+</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>We can also use the <code>subset</code> function. Note that this
@@ -1895,6 +1929,12 @@ reference columns within that data set without needing to use the
 <code>$</code> notation:</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3Vic2V0KGNoZXMsIGZhbWlseSA9PSBcImdyZWVuXCIpXG5cbiMgT1I6XG4jIGdyZWVuX3BhcnRpZXMgfD4gc3Vic2V0KGZhbWlseT09XCJncmVlblwiKVxuYGBgIn0= -->
+<pre class="r"><code>subset(ches, family == &quot;green&quot;)
+
+# OR:
+# green_parties |&gt; subset(family==&quot;green&quot;)</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>Another option we’ll explore more in the future is the
@@ -1903,6 +1943,11 @@ is almost identical to the syntax for <code>subset</code>, and it also
 takes a dataset as its first argument:</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShkcGx5cilcbmNoZXN8PmZpbHRlcihmYW1pbHk9PVwiZ3JlZW5cIilcblxuXG5gYGAifQ== -->
+<pre class="r"><code>library(dplyr)
+ches|&gt;filter(family==&quot;green&quot;)
+</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 </div>
@@ -1924,6 +1969,10 @@ vote in the previous election</p>
 two-dimensional frequency tables.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGFibGUoY2hlcyRmYW1pbHkpXG5cbmBgYCJ9 -->
+<pre class="r"><code>table(ches$family)
+</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>In some cases, it may be more useful to examine the percentages in
@@ -1932,6 +1981,11 @@ each group, rather than the raw frequencies. You can use the
 existing table object.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGFibGVfb2ZfZmFtaWxpZXM8LXRhYmxlKGNoZXMkZmFtaWx5KVxuXG5wcm9wLnRhYmxlKHRhYmxlX29mX2ZhbWlsaWVzKVxuYGBgIn0= -->
+<pre class="r"><code>table_of_families&lt;-table(ches$family)
+
+prop.table(table_of_families)</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <div id="crosstabs" class="section level4">
@@ -1941,12 +1995,22 @@ generate a cross tab. The first group will be presented in the rows, and
 the second group in the columns.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG50YWJsZShjaGVzJGZhbWlseSwgY2hlcyRnb3Z0KVxuXG5gYGAifQ== -->
+<pre class="r"><code>
+table(ches$family, ches$govt)
+</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>By default, using the <code>prop.table</code> function on a two way
 table will give us the percentage of observations within each cell.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG50YWJsZShjaGVzJGZhbWlseSwgY2hlcyRnb3Z0KXw+cHJvcC50YWJsZSgpXG5cbmBgYCJ9 -->
+<pre class="r"><code>
+table(ches$family, ches$govt)|&gt;prop.table()
+</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>…But this isn’t always a useful metric. More often, we’ll want to use
@@ -1966,6 +2030,13 @@ and if the total number is in the columns, I’ll use
 <code>margin=2</code></p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG5nb3Z0X3BhcnRpZXM8LXRhYmxlKFwiZmFtaWx5XCI9Y2hlcyRmYW1pbHksIFwiaW4gZ292dD9cIj1jaGVzJGdvdnQpXG5cbmdvdnRfcGFydGllc1xuXG5gYGAifQ== -->
+<pre class="r"><code>
+govt_parties&lt;-table(&quot;family&quot;=ches$family, &quot;in govt?&quot;=ches$govt)
+
+govt_parties
+</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 </div>
@@ -1989,6 +2060,15 @@ janitor package</a>, which allows you to use the <code>tabyl</code>
 command to create tables:</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG5saWJyYXJ5KGphbml0b3IpXG5cbnQxIDwtIHRhYnlsKGRhdD1jaGVzLCB2YXIxPWZhbWlseSwgdmFyMj1nb3Z0KVxuXG50MVxuXG5gYGAifQ== -->
+<pre class="r"><code>
+library(janitor)
+
+t1 &lt;- tabyl(dat=ches, var1=family, var2=govt)
+
+t1
+</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>On its own, this isn’t much to write home about, but it provides a
@@ -1996,6 +2076,15 @@ lot of nice options for <code>adorning</code> the table with additional
 statistics:</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG5cbnQxfD5cbiAgYWRvcm5fdG90YWxzKFwicm93XCIpfD4gIyBhZGQgdG90YWxzXG4gIGFkb3JuX3BlcmNlbnRhZ2VzKFwicm93XCIpfD4gIyBjYWxjdWxhdGUgcGVyY2VudGFnZXNcbiAgYWRvcm5fcGN0X2Zvcm1hdHRpbmcoKSAjIGZvcm1hdCBwZXJjZW50YWdlc1xuXG5gYGAifQ== -->
+<pre class="r"><code>
+
+t1|&gt;
+  adorn_totals(&quot;row&quot;)|&gt; # add totals
+  adorn_percentages(&quot;row&quot;)|&gt; # calculate percentages
+  adorn_pct_formatting() # format percentages
+</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 </div>
@@ -2027,6 +2116,15 @@ variable, and then use “summarise” to summarize over members of each
 group.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShkcGx5cikgIyBpZiB5b3UgaGF2ZW4ndCBhbHJlYWR5IGxvYWRlZCBkcGx5clxuY29ycnVwdGlvbl9zYWxpZW5jZTwtY2hlc3w+XG4gIGdyb3VwX2J5KGNvdW50cnkpfD5cbiAgc3VtbWFyaXNlKGF2Z19jb3JydXB0aW9uX3NhbGllbmNlID0gbWVhbihjb3JydXB0X3NhbGllbmNlKSlcblxuY29ycnVwdGlvbl9zYWxpZW5jZVxuXG5cbmBgYCJ9 -->
+<pre class="r"><code>library(dplyr) # if you haven&#39;t already loaded dplyr
+corruption_salience&lt;-ches|&gt;
+  group_by(country)|&gt;
+  summarise(avg_corruption_salience = mean(corrupt_salience))
+
+corruption_salience
+</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>Going forward, we’ll mostly use the <code>dplyr</code> commands for
@@ -2041,6 +2139,10 @@ to get each party family’s average position on redistribution
 issues.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyB5b3VyIGNvZGUgaGVyZS4uLi5cblxuXG5gYGAifQ== -->
+<pre class="r"><code># your code here....
+</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <div id="functions" class="section level2">
@@ -2067,6 +2169,17 @@ ches$party[top_n]
 function.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG5cbnRvcG5GdW5jdGlvbiA8LSBmdW5jdGlvbihsYWJlbHMsIHZhbHVlcywgbil7ICMgdGhlIGFyZ3VtZW50cyBcbiAgdG9wX24gPC0gb3JkZXIodmFsdWVzLCBkZWNyZWFzaW5nPSBUKVsxOm5dICMgdGhlIHN1YnNldFxuICByZXN1bHQ8LWxhYmVsc1t0b3Bfbl0gIyB0aGUgcmVzdWx0ICBcbiAgcmV0dXJuKHJlc3VsdCkgIyB0aGUgcmV0dXJuIHN0YXRlbWVudFxuICBcbn1cblxuYGBgIn0= -->
+<pre class="r"><code>
+
+topnFunction &lt;- function(labels, values, n){ # the arguments 
+  top_n &lt;- order(values, decreasing= T)[1:n] # the subset
+  result&lt;-labels[top_n] # the result  
+  return(result) # the return statement
+  
+}
+</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>Now I can use this in a bunch of different scenarios. Maybe I want to
