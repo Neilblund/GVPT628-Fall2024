@@ -244,18 +244,6 @@ t1|>
 
 ```
 
-### Making things look nice
-
-Looks matter! When you're exploring data for yourself, it might be okay to ignore aesthetics, but if you want to communicate your results to someone else, its important to keep things readable. The goal of offering a graph or table is to offer a visual summary of your data, and you undermine that goal when you produce unreadable output.
-
-Some general tips:
-
--   **Look at what you've made.** Ask yourself: "is this readable? Would another person be able to get useful information from this visualization?"
-
--   **Always give clear labels**. Shorthand is good for coding, but its bad for communicating. e.g.: Don't call it "Pid3cat", call it "Party ID (3-Category)"
-
--   **Use a sensible level of precision.** R will give you a figure rounded to the bazillionth digit, but this looks bad in a table or plot, and it can give a misleading impression of how precise your measurements are.
-
 # Aggregation and grouping
 
 We can use `aggregate` with the formula syntax to apply a function by group: the \~ is an infix operator, so it takes a LHS and RHS operator. The LHS in this case should be the dependent variable (the outcome you want to measure). The RHS should be the independent variable (the thing you want to group over). So, if we want to get the average level of corruption salience in each country, we can run something like this:
