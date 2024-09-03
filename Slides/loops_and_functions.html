@@ -2757,6 +2757,36 @@ Neil Lund
   <p class="date">2024-09-03</p>
 </section>
 <section>
+<section id="control-flow" class="title-slide slide level1 center">
+<h1>Control Flow</h1>
+
+</section>
+<section id="if-statements" class="title-slide slide level2 center">
+<h2>if statements</h2>
+<p>Control flow allows us to selectively run chunks of code. The most common control flow will be <code>if</code> statements. Code inside of an <code>if</code> expression will only be evaluated if a condition is true:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href></a>i <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb1-2"><a href></a><span class="cf">if</span>(i <span class="sc">%%</span> <span class="dv">2</span> <span class="sc">==</span> <span class="dv">0</span> ){</span>
+<span id="cb1-3"><a href></a>  <span class="fu">print</span>(<span class="st">&#39;i is divisible by 2&#39;</span>)</span>
+<span id="cb1-4"><a href></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] &quot;i is divisible by 2&quot;</code></pre>
+</div>
+</div>
+<p>If the statement evaluates to false, nothing happens. However, we can get more complex behaviors by adding <code>else</code> statements (or nested <code>if</code>s)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href></a>i <span class="ot">&lt;-</span> <span class="dv">11</span></span>
+<span id="cb3-2"><a href></a><span class="cf">if</span>(i <span class="sc">%%</span> <span class="dv">2</span> <span class="sc">==</span> <span class="dv">0</span> ){</span>
+<span id="cb3-3"><a href></a>  <span class="fu">print</span>(i)</span>
+<span id="cb3-4"><a href></a>}<span class="cf">else</span>{</span>
+<span id="cb3-5"><a href></a>  <span class="fu">print</span>(<span class="st">&#39;i is not divisible by 2&#39;</span>)</span>
+<span id="cb3-6"><a href></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] &quot;i is not divisible by 2&quot;</code></pre>
+</div>
+</div>
+</section>
+
 <section id="loops" class="title-slide slide level2 center">
 <h2>Loops</h2>
 <p>Use loops to run the same code multiple times.</p>
@@ -2769,14 +2799,14 @@ Neil Lund
 <section id="a-repeat-loop" class="slide level3">
 <h3>A repeat loop</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href></a>i <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb1-2"><a href></a><span class="cf">repeat</span>{</span>
-<span id="cb1-3"><a href></a>  <span class="fu">print</span>(i)</span>
-<span id="cb1-4"><a href></a>  i <span class="ot">&lt;-</span> i <span class="sc">+</span> <span class="dv">1</span></span>
-<span id="cb1-5"><a href></a>  <span class="cf">if</span> (i <span class="sc">&gt;</span> <span class="dv">15</span>) {</span>
-<span id="cb1-6"><a href></a>    <span class="cf">break</span> <span class="co"># break stops the loop</span></span>
-<span id="cb1-7"><a href></a>  }</span>
-<span id="cb1-8"><a href></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href></a>i <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb5-2"><a href></a><span class="cf">repeat</span>{</span>
+<span id="cb5-3"><a href></a>  <span class="fu">print</span>(i)</span>
+<span id="cb5-4"><a href></a>  i <span class="ot">&lt;-</span> i <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb5-5"><a href></a>  <span class="cf">if</span> (i <span class="sc">&gt;</span> <span class="dv">15</span>) {</span>
+<span id="cb5-6"><a href></a>    <span class="cf">break</span> <span class="co"># break stops the loop</span></span>
+<span id="cb5-7"><a href></a>  }</span>
+<span id="cb5-8"><a href></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1
 [1] 2
@@ -2800,11 +2830,11 @@ Neil Lund
 <h3>A while loop</h3>
 <p>In a while loop, then <code>break</code> statement is implicit. These loops stop whenever the <code>while</code> condition evaluates as <code>TRUE</code></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href></a>i <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb3-2"><a href></a><span class="cf">while</span>(i <span class="sc">&lt;=</span> <span class="dv">15</span>){</span>
-<span id="cb3-3"><a href></a>  <span class="fu">print</span>(i)</span>
-<span id="cb3-4"><a href></a>  i <span class="ot">&lt;-</span> i <span class="sc">+</span><span class="dv">1</span></span>
-<span id="cb3-5"><a href></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href></a>i <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb7-2"><a href></a><span class="cf">while</span>(i <span class="sc">&lt;=</span> <span class="dv">15</span>){</span>
+<span id="cb7-3"><a href></a>  <span class="fu">print</span>(i)</span>
+<span id="cb7-4"><a href></a>  i <span class="ot">&lt;-</span> i <span class="sc">+</span><span class="dv">1</span></span>
+<span id="cb7-5"><a href></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1
 [1] 2
@@ -2828,11 +2858,11 @@ Neil Lund
 <h3>A for loop</h3>
 <p><code>for</code> loops are the most concise, and are the most commonly used. A for loop will just run for each element of the vector specified in the <code>for</code> statement:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">15</span>){ </span>
-<span id="cb5-2"><a href></a>  </span>
-<span id="cb5-3"><a href></a>  <span class="fu">print</span>(i) </span>
-<span id="cb5-4"><a href></a>  </span>
-<span id="cb5-5"><a href></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">15</span>){ </span>
+<span id="cb9-2"><a href></a>  </span>
+<span id="cb9-3"><a href></a>  <span class="fu">print</span>(i) </span>
+<span id="cb9-4"><a href></a>  </span>
+<span id="cb9-5"><a href></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1
 [1] 2
@@ -2854,44 +2884,143 @@ Neil Lund
 <div class="fragment">
 <p>Note that I don’t need to increment <code>i</code> here, or even create it before-hand!</p>
 </div>
-</section></section>
+</section>
+<section id="using-loops" class="slide level3">
+<h3>Using loops</h3>
+<p>One of the most common use-cases for a loop will be to create a new dataset by growing something inside of a looping operation.</p>
+<p>For instance, if I wanted a list of states that start with the letter “A”:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href></a>a_states<span class="ot">&lt;-</span><span class="fu">c</span>()</span>
+<span id="cb11-2"><a href></a><span class="co"># (state.name is a built-in list of US states)</span></span>
+<span id="cb11-3"><a href></a><span class="cf">for</span>(i <span class="cf">in</span> state.name){</span>
+<span id="cb11-4"><a href></a>  </span>
+<span id="cb11-5"><a href></a>  first_letter<span class="ot">&lt;-</span><span class="fu">substr</span>(i, <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb11-6"><a href></a>  <span class="cf">if</span>(first_letter <span class="sc">==</span> <span class="st">&#39;A&#39;</span>){</span>
+<span id="cb11-7"><a href></a>    a_states<span class="ot">&lt;-</span><span class="fu">c</span>(a_states, i)</span>
+<span id="cb11-8"><a href></a>  }</span>
+<span id="cb11-9"><a href></a>  </span>
+<span id="cb11-10"><a href></a>}</span>
+<span id="cb11-11"><a href></a></span>
+<span id="cb11-12"><a href></a>a_states</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] &quot;Alabama&quot;  &quot;Alaska&quot;   &quot;Arizona&quot;  &quot;Arkansas&quot;</code></pre>
+</div>
+</div>
+</section>
+<section id="question" class="slide level3">
+<h3>Question:</h3>
+<p>What if I wanted to list all of the Friday the 13ths between a set of dates?</p>
+<p>Use seq.Date() to create a sequence of days between two dates</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href></a>datevector<span class="ot">&lt;-</span><span class="fu">seq.Date</span>(<span class="at">from=</span><span class="fu">as.Date</span>(<span class="st">&#39;2020-01-01&#39;</span>), </span>
+<span id="cb13-2"><a href></a>                     <span class="at">to=</span><span class="fu">as.Date</span>(<span class="st">&#39;2024-12-31&#39;</span>), </span>
+<span id="cb13-3"><a href></a>                     <span class="at">by=</span><span class="st">&#39;day&#39;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>You can get the day of the week like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href></a><span class="fu">weekdays</span>(datevector[<span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] &quot;Wednesday&quot;</code></pre>
+</div>
+</div>
+<p>And you can get the day part of a date object like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href></a>lubridate<span class="sc">::</span><span class="fu">day</span>(datevector[<span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1</code></pre>
+</div>
+</div>
+</section>
+<section id="when-to-avoid-loops" class="slide level3">
+<h3>When to avoid loops</h3>
+<ul>
+<li><p>We can <em>usually</em> avoid using loops in R because most R functions are already vectorized.</p></li>
+<li><p>The most common use case will be scenarios where we need to build a whole data set from some complex operation. Especially when we need to retrieve data slowly from an API.</p></li>
+<li><p>R loops are notoriously slow and inefficient. So we avoid them where possible and try not to make anything really big in them.</p></li>
+</ul>
+</section>
+
+<section id="apply-loops" class="title-slide slide level2 center">
+<h2>Apply loops</h2>
+<p>Apply family functions are a concise way of writing loops that you might see from time-to-time. They use a syntax that’s similar to what we saw with <code>aggregate</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href></a><span class="fu">sapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="at">FUN=</span><span class="cf">function</span>(x) <span class="fu">print</span>(x))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1
+[1] 2
+[1] 3
+[1] 4
+[1] 5
+[1] 6
+[1] 7
+[1] 8
+[1] 9
+[1] 10</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1]  1  2  3  4  5  6  7  8  9 10</code></pre>
+</div>
+</div>
+</section>
+</section>
 <section>
-<section id="question" class="title-slide slide level1 center">
-<h1>Question:</h1>
-
+<section id="functions" class="title-slide slide level1 center">
+<h1>Functions</h1>
+<p>Remember that R functions are just a chunk of code you can easily repeat. To create a function, you can just run something like: <code>function_name &lt;- function(variables){code}</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href></a>my_function<span class="ot">&lt;-</span><span class="cf">function</span>(x){</span>
+<span id="cb21-2"><a href></a>  <span class="fu">print</span>(<span class="fu">sprintf</span>(<span class="st">&quot;you entered %s&quot;</span>, x))</span>
+<span id="cb21-3"><a href></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
-<section id="what-if-i-wanted-to-list-all-of-the-friday-the-13ths-between-a-set-of-dates" class="title-slide slide level2 center">
-<h2>What if I wanted to list all of the Friday the 13ths between a set of dates?</h2>
-
-</section>
-</section>
-<section id="use-seq.date-to-create-a-sequence-of-days-between-two-dates" class="title-slide slide level1 center">
-<h1>use seq.Date() to create a sequence of days between two dates</h1>
-<p>datevector&lt;-seq.Date(from=as.Date(‘2020-01-01’), # note R is finicky about dates to=as.Date(‘2024-12-31’), by=‘day’)</p>
-</section>
-
-<section id="you-can-get-the-day-of-the-week-like-this" class="title-slide slide level1 center">
-<h1>you can get the day of the week like this:</h1>
-<p>weekdays(datevector[1])</p>
-</section>
-
-<section>
-<section id="you-can-get-the-day-part-of-a-date-object-like-this" class="title-slide slide level1 center">
-<h1>you can get the day part of a date object like this:</h1>
-<p>day(datevector[1])</p>
-</section>
-<section id="q1.-calculate-a-cumulative-average-for-this-vector-" class="title-slide slide level2 center">
-<h2>Q1. Calculate a cumulative average for this vector—-</h2>
-
-</section>
-</section>
-<section id="why-not-use-loops" class="title-slide slide level1 center">
-<h1>Why not use loops?</h1>
-
+<section id="function-environment" class="title-slide slide level2 center">
+<h2>Function environment</h2>
+<p>What does this code do?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href></a>my_function<span class="ot">&lt;-</span><span class="cf">function</span>(x){</span>
+<span id="cb22-2"><a href></a>  x</span>
+<span id="cb22-3"><a href></a>  <span class="fu">print</span>(<span class="fu">sprintf</span>(<span class="st">&quot;you entered %s&quot;</span>, x))</span>
+<span id="cb22-4"><a href></a>}</span>
+<span id="cb22-5"><a href></a></span>
+<span id="cb22-6"><a href></a></span>
+<span id="cb22-7"><a href></a>x <span class="ot">&lt;-</span> <span class="dv">30</span></span>
+<span id="cb22-8"><a href></a></span>
+<span id="cb22-9"><a href></a><span class="fu">my_function</span>(<span class="at">x=</span><span class="dv">90</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="fragment">
+<p>The variables you specify in a function argument will take precedence over objects of the same name inside the global environment.</p>
+</div>
 </section>
 
-<section id="functions--" class="title-slide slide level1 center">
-<h1>Functions —-</h1>
+<section id="function-default-arguments" class="title-slide slide level2 center">
+<h2>Function default arguments</h2>
+<p>Functions can take multiple arguments, and can have defaults</p>
+<p>For instance, I could add a <code>na.rm</code> statement to my effective number of parties function to optionally remove missing values before I run my calculations:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href></a>enp<span class="ot">&lt;-</span><span class="cf">function</span>(x, <span class="at">na.rm=</span>T){</span>
+<span id="cb23-2"><a href></a>  <span class="cf">if</span>(na.rm<span class="sc">==</span><span class="cn">TRUE</span>){</span>
+<span id="cb23-3"><a href></a>    x<span class="ot">&lt;-</span>x[<span class="fu">which</span>(<span class="sc">!</span><span class="fu">is.na</span>(x))]</span>
+<span id="cb23-4"><a href></a>  }</span>
+<span id="cb23-5"><a href></a>  x<span class="ot">&lt;-</span>x<span class="sc">/</span><span class="fu">sum</span>(x) <span class="co"># normalize shares</span></span>
+<span id="cb23-6"><a href></a>  result<span class="ot">&lt;-</span><span class="dv">1</span><span class="sc">/</span><span class="fu">sum</span>(x<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb23-7"><a href></a>  <span class="fu">return</span>(result)</span>
+<span id="cb23-8"><a href></a>  </span>
+<span id="cb23-9"><a href></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="fragment">
+<p>The <code>na.rm=T</code> statement in the function declaration means that this is now the default value for this argument. Unless I tell R to do otherwise, then NA values get removed.</p>
+</div>
+</section>
+
+<section id="question-1" class="title-slide slide level2 center">
+<h2>Question</h2>
+<p>How would I generalize the “Friday the 13th” detecting loop to make it a function that could identify Friday the 13ths between any two dates?</p>
+</section>
+
+<section id="function-usage" class="title-slide slide level2 center">
+<h2>Function usage</h2>
+<p>Unlike loops, there are very few downsides to creating functions, beyond potentially making your code harder to read. As a rule: if you find yourself copy-pasting the same code over and over, you should make a function instead.</p>
+<p>A good practice is to specify functions at the top of the script. Or write them in a separate file and use <code>source</code> to load them into the environment.</p>
 <div class="quarto-auto-generated-content">
 <div class="footer footer-default">
 
@@ -2911,6 +3040,7 @@ Neil Lund
 <p> </p>
 </div>
 </div>
+</section>
 </section>
     </div>
   </div>
