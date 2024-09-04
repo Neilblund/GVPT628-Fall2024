@@ -1,0 +1,27 @@
+library(tidycensus)
+library(tidyverse)
+# loading the ACS income data
+county_income <- get_acs(
+  geography = "county", 
+  variables = "B19013_001", 
+  year = 2020)|>
+  filter(!is.na(estimate))
+
+mean(county_income$estimate, na.rm=T)
+
+
+# A function for generating the standard error
+seFunction<-function(x, na.rm=T){
+  x<-x[which(!is.na(x))]
+  se<-sqrt(sd(x)/length(x))
+  
+  return(se)
+  
+}
+
+mu <- mean(county_income$estimate)
+
+# lower bound
+mu -(seFunction(county_income$estimate) * qnorm(.975))
+# upper bound
+mu + (seFunction(county_income$estimate) * qnorm(.975))
