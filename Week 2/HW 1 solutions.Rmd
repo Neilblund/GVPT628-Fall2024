@@ -3,7 +3,7 @@ title: "Homework 1 Solutions"
 author: Neil Lund
 output: 
   html_document:
-      df_print: kable
+      df_print: paged
       code_download: true
       toc: true
       toc_depth: 3
