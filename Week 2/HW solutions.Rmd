@@ -48,6 +48,12 @@ There's a lot of ways to do this, one of the easiest is probably `table`+ `sort`
 table(ches$family)|>
   sort(decreasing=T)
 
+subset(ches, select = family)|>table()
+
+count(ches, family)
+
+
+
 
 ```
 
@@ -86,6 +92,7 @@ An equivalent using the `dplyr` package:
 
 ```{r}
 ches|>
+  filter(family =='rad left')|> # filter rad left
   select(party, country, seatperc)|> # get just the relevant cols
   arrange(-seatperc)|> # sort from highest to lowest
   slice_head(n=1) # take the first row
@@ -105,8 +112,7 @@ You can use aggregate:
 # aggregate(ches$UA_EU, list(ches$family) , FUN=mean)
 
 # OR: 
-
-aggregate(data=ches, UA_EU ~ family, FUN=mean)
+aggregate(data=ches, UA_EU ~ family, FUN=function(x) mean(x, na.rm=T))
 aggregate(data=ches, UA_EU ~ family, FUN=sd)
 
           
@@ -118,13 +124,13 @@ You can also use `dplyr`'s `summarize` with `group_by`, which allows you to crea
 
 ches|>
   group_by(family)|>
-  summarise(mean_sup = mean(UA_EU),
+  summarize(mean_sup = mean(UA_EU),
             sd_sup = sd(UA_EU)
             )
 
 ```
 
-## Q4 
+## Q4
 
 **Calculate the effective number of political parties. for a single country of your choosing based on either seat-share or vote-share**
 
@@ -184,6 +190,3 @@ ches|>
             )
 
 ```
-
-
-
