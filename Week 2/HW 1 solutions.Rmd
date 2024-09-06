@@ -1,0 +1,192 @@
+---
+title: "Homework 1 Solutions"
+author: Neil Lund
+output: 
+  html_document:
+      df_print: kable
+      code_download: true
+      toc: true
+      toc_depth: 3
+      toc_float: true
+---
+
+```{r setup, include=FALSE}
+
+# good default settings for homeworks (suppress warning messages but always show code and output)
+knitr::opts_chunk$set(echo = TRUE, 
+                      warning =FALSE,
+                      message=FALSE)
+
+# if you have code that runs for a long time, add cache=TRUE to this set of options, this will prevent the code from being re-evaluated every time you knit the document
+
+
+```
+
+# Preamble
+
+```{r}
+library(tidyverse)
+
+# download the CHES special edition data:
+ches<-haven::read_dta('https://www.chesdata.eu/s/CHES_Ukraine_March_2024.dta')
+
+# convert stata labelled vectors to R factors
+ches<-as_factor(ches)
+
+```
+
+## Q1
+
+**What is the most common party family among the 30 countries studied?**
+
+A. The liberal party family
+
+There's a lot of ways to do this, one of the easiest is probably `table`+ `sort`
+
+```{r}
+
+table(ches$family)|>
+  sort(decreasing=T)
+
+subset(ches, select = family)|>table()
+
+count(ches, family)
+
+
+
+
+```
+
+An alternative method is to use the dplyr function `count` with `arrange`. This returns a `tibble` instead of a named vector, which can be easier to use (and will look nicer in markdown if we set `df_print: kable` in the markdown options)
+
+```{r}
+ches|>
+  count(family, sort=TRUE)
+
+```
+
+## Q2
+
+**What is the most successful radical left party based on current seat share? (give the party name and country)**
+
+Syriza (Greece) with 23.6% of seats.
+
+A base R method could use `order` or `which.max`
+
+```{r}
+radleft <- ches[which(ches$family=='rad left'),]
+
+# get the index of the highest value using order:
+maxvalue<-order(radleft$seatperc, decreasing=T)[1]
+
+# or use which.max()
+maxvalue<-which.max(radleft$seatperc)
+
+radleft[maxvalue,c('party', 'country', 'seatperc')]
+
+
+
+```
+
+An equivalent using the `dplyr` package:
+
+```{r}
+ches|>
+  filter(family =='rad left')|> # filter rad left
+  select(party, country, seatperc)|> # get just the relevant cols
+  arrange(-seatperc)|> # sort from highest to lowest
+  slice_head(n=1) # take the first row
+
+```
+
+## Q3
+
+**Calculate the average and the standard deviation of UA_EU (average support for Ukraine joining the European Union) for each party family. What family has the highest average? What family has the highest variance in their level of support?**
+
+Liberal have the highest average. Traditional/Authoritarian/Nationalist parties have the highest variance
+
+You can use aggregate:
+
+```{r}
+
+# aggregate(ches$UA_EU, list(ches$family) , FUN=mean)
+
+# OR: 
+aggregate(data=ches, UA_EU ~ family, FUN=function(x) mean(x, na.rm=T))
+aggregate(data=ches, UA_EU ~ family, FUN=sd)
+
+          
+```
+
+You can also use `dplyr`'s `summarize` with `group_by`, which allows you to create a single data frame with both metrics included
+
+```{r}
+
+ches|>
+  group_by(family)|>
+  summarize(mean_sup = mean(UA_EU),
+            sd_sup = sd(UA_EU)
+            )
+
+```
+
+## Q4
+
+**Calculate the effective number of political parties. for a single country of your choosing based on either seat-share or vote-share**
+
+The ENPP measure is:
+
+$$N = \frac{1}{\sum^n_{i=1} p_i^2} $$ Where `p` is either a seat share or a vote share.
+
+We can calculate this for Hungary:
+
+```{r}
+# get the rows for Hungary:
+hungary_rows<-ches$seatperc[which(ches$country=="Hungary")]
+
+# normalize so they sum to 1
+normalized<-hungary_rows/sum(hungary_rows)
+
+# now calculate:
+1/sum(normalized^2)
+
+```
+
+## Q5
+
+**Write a function that takes the number of seats held by each party in a given country and returns the effective number of political parties.**
+
+The simplest version more-or-less just generalizes from what we used above. Replacing the specific seatshares vector with "x":
+
+```{r}
+enp<-function(x){
+  x<-x/sum(x) # normalize shares
+  result<-1/sum(x^2)
+  return(result)
+  
+}
+
+
+
+
+```
+
+Now we can use this function with aggregate to get results for all countries at once:
+
+```{r}
+
+aggregate(ches, seatperc ~ country, enp)
+
+```
+
+Or use `dplyr` functions to get electoral parties based on vote share, and parliamentary parties based on seats:
+
+```{r}
+
+ches|>
+  group_by(country)|>
+  summarise(enpp = enp(seatperc),
+            enep = enp(vote)
+            )
+
+```
