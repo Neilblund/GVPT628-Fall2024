@@ -2791,7 +2791,7 @@ Neil Lund
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["expr"],"name":[1],"type":["fct"],"align":["left"]},{"label":["min"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["lq"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["mean"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["median"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["uq"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["max"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["neval"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["cld"],"name":[9],"type":["chr"],"align":["left"]}],"data":[{"1":"sum(myvec)","2":"700","3":"1000","4":"1767","5":"1500","6":"2100","7":"9500","8":"100","9":"a"},{"1":"sumFunction(myvec)","2":"579700","3":"631800","4":"1968061","5":"1089350","6":"2741200","7":"10217400","8":"100","9":"b"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["expr"],"name":[1],"type":["fct"],"align":["left"]},{"label":["min"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["lq"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["mean"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["median"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["uq"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["max"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["neval"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["cld"],"name":[9],"type":["chr"],"align":["left"]}],"data":[{"1":"sum(myvec)","2":"700","3":"900","4":"1449","5":"1200","6":"1600","7":"7700","8":"100","9":"a"},{"1":"sumFunction(myvec)","2":"483100","3":"599750","4":"1619036","5":"676550","6":"2228300","7":"8997100","8":"100","9":"b"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -3143,11 +3143,11 @@ $fr.1999
 <span id="cb27-5"><a href></a>  <span class="fu">select</span>(date, locality, state, events)</span>
 <span id="cb27-6"><a href></a></span>
 <span id="cb27-7"><a href></a></span>
-<span id="cb27-8"><a href></a><span class="fu">head</span>(ccc_modified)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb27-8"><a href></a>ccc_modified<span class="sc">|&gt;</span><span class="fu">slice_head</span>(<span class="at">n=</span><span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["date"],"name":[1],"type":["date"],"align":["right"]},{"label":["locality"],"name":[2],"type":["chr"],"align":["left"]},{"label":["state"],"name":[3],"type":["chr"],"align":["left"]},{"label":["events"],"name":[4],"type":["int"],"align":["right"]}],"data":[{"1":"2017-01-01","2":"Washington","3":"DC","4":"2579"},{"1":"2017-01-01","2":"Mankato","3":"MN","4":"1483"},{"1":"2017-01-01","2":"Minneapolis","3":"MN","4":"1483"},{"1":"2017-01-01","2":"Little Compton","3":"RI","4":"519"},{"1":"2017-01-01","2":"Oak Ridge","3":"TN","4":"1203"},{"1":"2017-01-02","2":"Washington","3":"DC","4":"2579"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["date"],"name":[1],"type":["date"],"align":["right"]},{"label":["locality"],"name":[2],"type":["chr"],"align":["left"]},{"label":["state"],"name":[3],"type":["chr"],"align":["left"]},{"label":["events"],"name":[4],"type":["int"],"align":["right"]}],"data":[{"1":"2017-01-01","2":"Washington","3":"DC","4":"2579"},{"1":"2017-01-01","2":"Mankato","3":"MN","4":"1483"},{"1":"2017-01-01","2":"Minneapolis","3":"MN","4":"1483"},{"1":"2017-01-01","2":"Little Compton","3":"RI","4":"519"},{"1":"2017-01-01","2":"Oak Ridge","3":"TN","4":"1203"},{"1":"2017-01-02","2":"Washington","3":"DC","4":"2579"},{"1":"2017-01-02","2":"Delmar","3":"NY","4":"6987"},{"1":"2017-01-03","2":"Washington","3":"DC","4":"2579"},{"1":"2017-01-03","2":"Palmetto Bay","3":"FL","4":"2911"},{"1":"2017-01-03","2":"Astoria","3":"OR","4":"2328"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -3193,11 +3193,11 @@ $fr.1999
 <span id="cb28-4"><a href></a>  <span class="fu">summarise</span>(<span class="at">events =</span> <span class="fu">n</span>())<span class="sc">|&gt;</span></span>
 <span id="cb28-5"><a href></a>  <span class="fu">ungroup</span>()</span>
 <span id="cb28-6"><a href></a></span>
-<span id="cb28-7"><a href></a><span class="fu">head</span>(ccc_long)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb28-7"><a href></a>ccc_long<span class="sc">|&gt;</span><span class="fu">slice_head</span>(<span class="at">n=</span><span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["state"],"name":[1],"type":["chr"],"align":["left"]},{"label":["year"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["events"],"name":[3],"type":["int"],"align":["right"]}],"data":[{"1":"AK","2":"2017","3":"95"},{"1":"AK","2":"2018","3":"116"},{"1":"AK","2":"2019","3":"80"},{"1":"AK","2":"2020","3":"95"},{"1":"AL","2":"2017","3":"79"},{"1":"AL","2":"2018","3":"166"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["state"],"name":[1],"type":["chr"],"align":["left"]},{"label":["year"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["events"],"name":[3],"type":["int"],"align":["right"]}],"data":[{"1":"AK","2":"2017","3":"95"},{"1":"AK","2":"2018","3":"116"},{"1":"AK","2":"2019","3":"80"},{"1":"AK","2":"2020","3":"95"},{"1":"AL","2":"2017","3":"79"},{"1":"AL","2":"2018","3":"166"},{"1":"AL","2":"2019","3":"74"},{"1":"AL","2":"2020","3":"188"},{"1":"AR","2":"2017","3":"48"},{"1":"AR","2":"2018","3":"95"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -3212,12 +3212,13 @@ $fr.1999
 <span id="cb29-5"><a href></a>  <span class="fu">ungroup</span>()<span class="sc">|&gt;</span></span>
 <span id="cb29-6"><a href></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> year,</span>
 <span id="cb29-7"><a href></a>              <span class="at">values_from =</span> events)</span>
-<span id="cb29-8"><a href></a></span>
-<span id="cb29-9"><a href></a><span class="fu">head</span>(ccc_wide)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb29-8"><a href></a>  </span>
+<span id="cb29-9"><a href></a></span>
+<span id="cb29-10"><a href></a>ccc_wide<span class="sc">|&gt;</span><span class="fu">slice_head</span>(<span class="at">n=</span><span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["state"],"name":[1],"type":["chr"],"align":["left"]},{"label":["2017"],"name":[2],"type":["int"],"align":["right"]},{"label":["2018"],"name":[3],"type":["int"],"align":["right"]},{"label":["2019"],"name":[4],"type":["int"],"align":["right"]},{"label":["2020"],"name":[5],"type":["int"],"align":["right"]}],"data":[{"1":"AK","2":"95","3":"116","4":"80","5":"95"},{"1":"AL","2":"79","3":"166","4":"74","5":"188"},{"1":"AR","2":"48","3":"95","4":"36","5":"108"},{"1":"AZ","2":"287","3":"516","4":"297","5":"496"},{"1":"CA","2":"1273","3":"2605","4":"1563","5":"3730"},{"1":"CO","2":"266","3":"455","4":"221","5":"442"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["state"],"name":[1],"type":["chr"],"align":["left"]},{"label":["2017"],"name":[2],"type":["int"],"align":["right"]},{"label":["2018"],"name":[3],"type":["int"],"align":["right"]},{"label":["2019"],"name":[4],"type":["int"],"align":["right"]},{"label":["2020"],"name":[5],"type":["int"],"align":["right"]}],"data":[{"1":"AK","2":"95","3":"116","4":"80","5":"95"},{"1":"AL","2":"79","3":"166","4":"74","5":"188"},{"1":"AR","2":"48","3":"95","4":"36","5":"108"},{"1":"AZ","2":"287","3":"516","4":"297","5":"496"},{"1":"CA","2":"1273","3":"2605","4":"1563","5":"3730"},{"1":"CO","2":"266","3":"455","4":"221","5":"442"},{"1":"CT","2":"232","3":"442","4":"194","5":"514"},{"1":"DC","2":"603","3":"643","4":"529","5":"804"},{"1":"DE","2":"29","3":"82","4":"23","5":"56"},{"1":"FL","2":"417","3":"962","4":"430","5":"1102"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -3234,12 +3235,12 @@ $fr.1999
 <span id="cb30-2"><a href></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="st">`</span><span class="at">2017</span><span class="st">`</span><span class="sc">:</span><span class="st">`</span><span class="at">2020</span><span class="st">`</span>, </span>
 <span id="cb30-3"><a href></a>               <span class="at">names_to =</span><span class="st">&#39;year&#39;</span>,</span>
 <span id="cb30-4"><a href></a>               <span class="at">values_to=</span><span class="st">&#39;events&#39;</span>)</span>
-<span id="cb30-5"><a href></a>  </span>
-<span id="cb30-6"><a href></a><span class="fu">head</span>(ccc_long)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb30-5"><a href></a></span>
+<span id="cb30-6"><a href></a>ccc_long<span class="sc">|&gt;</span><span class="fu">slice_head</span>(<span class="at">n=</span><span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["state"],"name":[1],"type":["chr"],"align":["left"]},{"label":["year"],"name":[2],"type":["chr"],"align":["left"]},{"label":["events"],"name":[3],"type":["int"],"align":["right"]}],"data":[{"1":"AK","2":"2017","3":"95"},{"1":"AK","2":"2018","3":"116"},{"1":"AK","2":"2019","3":"80"},{"1":"AK","2":"2020","3":"95"},{"1":"AL","2":"2017","3":"79"},{"1":"AL","2":"2018","3":"166"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["state"],"name":[1],"type":["chr"],"align":["left"]},{"label":["year"],"name":[2],"type":["chr"],"align":["left"]},{"label":["events"],"name":[3],"type":["int"],"align":["right"]}],"data":[{"1":"AK","2":"2017","3":"95"},{"1":"AK","2":"2018","3":"116"},{"1":"AK","2":"2019","3":"80"},{"1":"AK","2":"2020","3":"95"},{"1":"AL","2":"2017","3":"79"},{"1":"AL","2":"2018","3":"166"},{"1":"AL","2":"2019","3":"74"},{"1":"AL","2":"2020","3":"188"},{"1":"AR","2":"2017","3":"48"},{"1":"AR","2":"2018","3":"95"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -3263,65 +3264,12 @@ $fr.1999
 <span id="cb31-4"><a href></a>              <span class="at">year =</span><span class="dv">2017</span>)<span class="sc">|&gt;</span></span>
 <span id="cb31-5"><a href></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(estimate))</span>
 <span id="cb31-6"><a href></a></span>
-<span id="cb31-7"><a href></a></span>
-<span id="cb31-8"><a href></a><span class="fu">head</span>(state_income)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb31-7"><a href></a>state_income<span class="sc">|&gt;</span><span class="fu">slice_head</span>(<span class="at">n=</span><span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div class="kable-table">
-<table>
-<thead>
-<tr class="header">
-<th style="text-align: left;">GEOID</th>
-<th style="text-align: left;">NAME</th>
-<th style="text-align: left;">variable</th>
-<th style="text-align: right;">estimate</th>
-<th style="text-align: right;">moe</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">01</td>
-<td style="text-align: left;">Alabama</td>
-<td style="text-align: left;">medincome</td>
-<td style="text-align: right;">46472</td>
-<td style="text-align: right;">301</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">02</td>
-<td style="text-align: left;">Alaska</td>
-<td style="text-align: left;">medincome</td>
-<td style="text-align: right;">76114</td>
-<td style="text-align: right;">979</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">04</td>
-<td style="text-align: left;">Arizona</td>
-<td style="text-align: left;">medincome</td>
-<td style="text-align: right;">53510</td>
-<td style="text-align: right;">259</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">05</td>
-<td style="text-align: left;">Arkansas</td>
-<td style="text-align: left;">medincome</td>
-<td style="text-align: right;">43813</td>
-<td style="text-align: right;">401</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">06</td>
-<td style="text-align: left;">California</td>
-<td style="text-align: left;">medincome</td>
-<td style="text-align: right;">67169</td>
-<td style="text-align: right;">192</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">08</td>
-<td style="text-align: left;">Colorado</td>
-<td style="text-align: left;">medincome</td>
-<td style="text-align: right;">65458</td>
-<td style="text-align: right;">317</td>
-</tr>
-</tbody>
-</table>
+<div data-pagedtable="false">
+  <script data-pagedtable-source type="application/json">
+{"columns":[{"label":["GEOID"],"name":[1],"type":["chr"],"align":["left"]},{"label":["NAME"],"name":[2],"type":["chr"],"align":["left"]},{"label":["variable"],"name":[3],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["moe"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"01","2":"Alabama","3":"medincome","4":"46472","5":"301"},{"1":"02","2":"Alaska","3":"medincome","4":"76114","5":"979"},{"1":"04","2":"Arizona","3":"medincome","4":"53510","5":"259"},{"1":"05","2":"Arkansas","3":"medincome","4":"43813","5":"401"},{"1":"06","2":"California","3":"medincome","4":"67169","5":"192"},{"1":"08","2":"Colorado","3":"medincome","4":"65458","5":"317"},{"1":"09","2":"Connecticut","3":"medincome","4":"73781","5":"450"},{"1":"10","2":"Delaware","3":"medincome","4":"63036","5":"738"},{"1":"11","2":"District of Columbia","3":"medincome","4":"77649","5":"1075"},{"1":"12","2":"Florida","3":"medincome","4":"50883","5":"140"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
 </div>
 </div>
 </div>
