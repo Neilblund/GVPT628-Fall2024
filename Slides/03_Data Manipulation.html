@@ -2791,7 +2791,7 @@ Neil Lund
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["expr"],"name":[1],"type":["fct"],"align":["left"]},{"label":["min"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["lq"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["mean"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["median"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["uq"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["max"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["neval"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["cld"],"name":[9],"type":["chr"],"align":["left"]}],"data":[{"1":"sum(myvec)","2":"700","3":"1100","4":"1926","5":"1400","6":"1850","7":"20000","8":"100","9":"a"},{"1":"sumFunction(myvec)","2":"589900","3":"638400","4":"1994656","5":"880700","6":"2485050","7":"10924800","8":"100","9":"b"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["expr"],"name":[1],"type":["fct"],"align":["left"]},{"label":["min"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["lq"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["mean"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["median"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["uq"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["max"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["neval"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["cld"],"name":[9],"type":["chr"],"align":["left"]}],"data":[{"1":"sum(myvec)","2":"700","3":"1000","4":"1767","5":"1500","6":"2100","7":"9500","8":"100","9":"a"},{"1":"sumFunction(myvec)","2":"579700","3":"631800","4":"1968061","5":"1089350","6":"2741200","7":"10217400","8":"100","9":"b"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -3154,6 +3154,7 @@ $fr.1999
 </div>
 </section>
 
+<section>
 <section id="other-common-operations" class="title-slide slide level1 center">
 <h1>Other common operations</h1>
 <p>These functions also respect the grouping context, so be careful about how you use them after calling group by because they can give very different results!</p>
@@ -3164,16 +3165,16 @@ $fr.1999
 <li><p><code>tally</code>/<code>count</code>: count the number of rows in the grouping context.</p></li>
 <li><p><code>distinct</code>: remove duplicate rows</p></li>
 </ul>
-<div class="fragment">
+</section>
+<section id="additional-resources" class="slide level3">
+<h3>Additional Resources</h3>
 <p><code>dplyr</code> is well documented and there’s a lot of useful information online. Consider checking these resources:</p>
 <ul>
 <li>The <a href="https://dplyr.tidyverse.org/index.html">online package documentation</a></li>
 <li>Chapter 5 of <a href="https://r4ds.had.co.nz/transform.html#transform">this online text</a></li>
 <li>This <a href="https://www.rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf">data wrangling cheat sheet</a></li>
 </ul>
-</div>
-</section>
-
+</section></section>
 <section>
 <section id="pivoting" class="title-slide slide level1 center">
 <h1>Pivoting</h1>
