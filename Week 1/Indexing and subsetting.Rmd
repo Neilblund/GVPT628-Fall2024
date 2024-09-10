@@ -215,6 +215,9 @@ Use `prop.table` with the margins argument to show the percentage of radical rig
 
 ```{r}
 
+table("family"=ches$family, "in govt?"=ches$govt)|>
+  prop.table(margin=3)
+
 
 ```
 
@@ -250,7 +253,9 @@ We can use `aggregate` with the formula syntax to apply a function by group: the
 
 ```{r}
 # x = the formula, FUN= should be a function you want to run for each group
-corruption_salience <- aggregate(x = corrupt_salience ~ country , FUN = mean, data = ches )
+corruption_salience <- aggregate(x = corrupt_salience ~ country , 
+                                 FUN = mean, 
+                                 data = ches )
 corruption_salience
 
 ```
@@ -261,11 +266,10 @@ There's also a `dplyr` method for this, that may be a little easier to parse. He
 
 ```{r}
 library(dplyr) # if you haven't already loaded dplyr
-corruption_salience<-ches|>
+newtable<-ches|>
   group_by(country)|>
-  summarise(avg_corruption_salience = mean(corrupt_salience))
+  summarise(poo= mean(corrupt_salience))
 
-corruption_salience
 
 
 ```
@@ -303,13 +307,13 @@ I could probably make this more generalized by creating a function.
 
 ```{r}
 
-
 topnFunction <- function(labels, values, n){ # the arguments 
   top_n <- order(values, decreasing= T)[1:n] # the subset
   result<-labels[top_n] # the result  
   return(result) # the return statement
   
 }
+
 
 ```
 
