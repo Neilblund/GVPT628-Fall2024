@@ -2,7 +2,8 @@ library(tidyverse) # dplyr and tidyverse are already part of this package
 
 # Mutate and Summarize ----
 # data on executive approval around the globe
-approval<-read_csv('https://osf.io/download/39pm6/')
+approval<-read_csv('https://osf.io/download/39pm6/')|>
+  filter(!is.na(wb_code))
 
 
 # How many observations do we have for each country?
@@ -93,5 +94,23 @@ ggplot(us_uk, aes(x=year, y=net_approval, group=1)) +
 
 
 ## Q5. Create a plot with approval and disapproval separately for the US only ----
+
+
+
+## Joins
+#install.packages("wbstats")
+
+library(wbstats)
+
+gdp_data<-wb_data(c("gdp" = "NY.GDP.MKTP.CD"), start_date=2010, end_date=2020)
+
+table(selected_country_means$wb_code%in%gdp_data$iso3c)
+
+#Q6. How do we add income data to the approval data?
+
+
+
+
+
 
 
