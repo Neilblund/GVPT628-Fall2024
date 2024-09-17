@@ -43,6 +43,15 @@ This same issue shows up in all of the FiveThirtyEight election data. How would 
 
 ```
 
+Take a look at the most recent elections (use `slice_max`). What's wrong here?
+
+```{r}
+
+
+
+
+```
+
 # Q2
 
 What is the most recent race to have occurred? (note that some of these haven't happened yet)
@@ -61,7 +70,7 @@ These results appear to be updated sporadically. So how could I find the most re
 
 # Q4
 
-How would I get all races in the next 120 days regardless of when I run the code? In other words, write someting that extracts upcoming races relative to `Sys.Date()`?
+How would I get all races in the next 120 days regardless of when I run the code? In other words, write something that extracts upcoming races relative to `Sys.Date()`?
 
 ```{r}
 
