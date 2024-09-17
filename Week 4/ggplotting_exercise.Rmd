@@ -1,0 +1,85 @@
+---
+title: "ggplotting"
+output: 
+  html_document:
+      df_print: paged
+      code_download: true
+      toc: true
+      toc_depth: 3
+      toc_float: true
+---
+
+
+```{r setup, include=FALSE }
+knitr::opts_chunk$set(echo = TRUE, message=FALSE)
+```
+
+```{r, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(tidycensus)
+# import the data from the URL
+url <- 'https://raw.githubusercontent.com/fivethirtyeight/election-results/main/election_results_presidential.csv'
+pres <- read_csv(url, show_col_types = FALSE) # quiet a message about column types
+
+two_party_vote<-
+  pres|>
+  filter(cycle == 2020)|>
+  filter(candidate_name == "Donald Trump" | candidate_name == "Joe Biden")|>
+  filter(stage == "general")|>
+  filter(!str_detect(state, "CD-"))|>
+  group_by(state, candidate_name)|>
+  summarise(votes = sum(votes))|>
+  pivot_wider(names_from=candidate_name, values_from=votes)
+```
+# Q1
+
+Plot the distribution of % vote share and median income separately (density, box, or histogram are likely options here)
+
+```{r}
+
+
+```
+
+
+# Q2
+
+Create a plot that shows the effect of median income on vote share (a scatter plot with a regression line).
+
+
+```{r}
+
+```
+
+
+
+# Q3 
+
+Add state labels to the scatter plot
+
+```{r}
+
+
+```
+
+## Q4
+
+Add marginal histograms or a boxplot using ggExtra
+
+```{r}
+
+
+```
+
+
+
+## Q5 
+
+Make an interactive with ggplotly
+
+```{r}
+
+
+```
+
+
+
