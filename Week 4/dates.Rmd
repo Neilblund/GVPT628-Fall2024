@@ -1,0 +1,88 @@
+---
+title: "ggplotting"
+output: 
+  html_document:
+      df_print: paged
+      code_download: true
+      toc: true
+      toc_depth: 3
+      toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Load in data on races from FiveThirtyEight
+
+```{r}
+library(tidyverse)
+url <- 'https://raw.githubusercontent.com/fivethirtyeight/election-results/refs/heads/main/races.csv'
+races<-read_csv(url)
+head(races)
+
+
+```
+
+# Q1
+
+How would I convert these dates to a proper R format?
+
+```{r}
+
+races|>select(date)|>head()
+
+```
+
+# Q1B
+
+This same issue shows up in all of the FiveThirtyEight election data. How would we write a function to automatically make this correction for this data?
+
+```{r}
+
+
+```
+
+# Q2
+
+What is the most recent race to have occurred? (note that some of these haven't happened yet)
+
+# Q3
+
+These results appear to be updated sporadically. So how could I find the most recent race or races for which outcome data are available?
+
+```{r}
+
+
+
+
+
+```
+
+# Q4
+
+How would I get all races in the next 120 days regardless of when I run the code? In other words, write someting that extracts upcoming races relative to `Sys.Date()`?
+
+```{r}
+
+
+
+```
+
+# Q5
+
+Access the House Race data from the [FiveThirtyEight github](https://github.com/fivethirtyeight/election-results/tree/main). What race has the narrowest margin of victory in the last 10 years?
+
+```{r}
+
+
+```
+
+# Q5B
+
+Create a plot showing your results
+
+```{r}
+
+
+```

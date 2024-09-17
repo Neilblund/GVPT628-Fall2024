@@ -1,0 +1,22 @@
+---
+title: "ggplot"
+output: html_document
+date: "2024-09-17"
+---
+
+
+```{r}
+library(tidyverse)
+library(tidycensus)
+# import the data from the URL
+url <- 'https://raw.githubusercontent.com/fivethirtyeight/election-results/main/election_results_presidential.csv'
+pres <- read_csv(url, show_col_types = FALSE) # quiet a message about column types
+
+two_party_vote<-
+  pres|>
+  filter(cycle == 2020)|>
+  filter(candidate_name == "Donald Trump" | candidate_name == "Joe Biden")|>
+  filter(stage == "general")|>
+  filter(!str_detect(state, "CD-"))|>
+  group_by(state, candidate_name)|>
+  summarise(votes = sum(votes))
