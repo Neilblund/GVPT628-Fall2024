@@ -2920,7 +2920,7 @@ Neil Lund
 </div>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href></a><span class="fu">Sys.time</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] &quot;2024-09-17 17:28:43 EDT&quot;</code></pre>
+<pre><code>[1] &quot;2024-09-17 17:52:17 EDT&quot;</code></pre>
 </div>
 </div>
 </section>
@@ -2957,6 +2957,15 @@ Neil Lund
 <section id="date-conversion" class="title-slide slide level2 center">
 <h2>Date conversion</h2>
 <p>Fixing formats can be tedious.</p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href></a><span class="fu">as.Date</span>(<span class="st">&quot;9/17/2024&quot;</span>, <span class="at">format=</span><span class="st">&#39;%m/%d/%Y&#39;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] &quot;2024-09-17&quot;</code></pre>
+</div>
+</div>
+</div><div class="column" style="width:50%;">
 <table>
 <tbody>
 <tr class="odd">
@@ -3013,10 +3022,6 @@ Neil Lund
 </tr>
 </tbody>
 </table>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href></a><span class="fu">as.Date</span>(<span class="st">&quot;9/17/2024&quot;</span>, <span class="at">format=</span><span class="st">&#39;%m/%d/%Y&#39;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] &quot;2024-09-17&quot;</code></pre>
 </div>
 </div>
 </section>
