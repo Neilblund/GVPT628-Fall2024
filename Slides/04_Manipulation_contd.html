@@ -2789,7 +2789,7 @@ Neil Lund
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["state"],"name":[1],"type":["chr"],"align":["left"]},{"label":["state.name"],"name":[2],"type":["chr"],"align":["left"]},{"label":["events"],"name":[3],"type":["int"],"align":["right"]},{"label":["estimate"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"AK","2":"Alaska","3":"386","4":"76114"},{"1":"AL","2":"Alabama","3":"507","4":"46472"},{"1":"AR","2":"Arkansas","3":"287","4":"43813"},{"1":"AZ","2":"Arizona","3":"1596","4":"53510"},{"1":"CA","2":"California","3":"9171","4":"67169"},{"1":"CO","2":"Colorado","3":"1384","4":"65458"},{"1":"CT","2":"Connecticut","3":"1382","4":"73781"},{"1":"DC","2":"NA","3":"2579","4":"NA"},{"1":"DE","2":"Delaware","3":"190","4":"63036"},{"1":"FL","2":"Florida","3":"2911","4":"50883"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[5],"max":[5]},"pages":{}}}
+{"columns":[{"label":["state"],"name":[1],"type":["chr"],"align":["left"]},{"label":["state.name"],"name":[2],"type":["chr"],"align":["left"]},{"label":["events"],"name":[3],"type":["int"],"align":["right"]},{"label":["estimate"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"AK","2":"Alaska","3":"386","4":"76114"},{"1":"AL","2":"Alabama","3":"507","4":"46472"},{"1":"AR","2":"Arkansas","3":"287","4":"43813"},{"1":"AZ","2":"Arizona","3":"1596","4":"53510"},{"1":"CA","2":"California","3":"9171","4":"67169"},{"1":"CO","2":"Colorado","3":"1384","4":"65458"},{"1":"CT","2":"Connecticut","3":"1382","4":"73781"},{"1":"DC","2":"NA","3":"2579","4":"NA"},{"1":"DE","2":"Delaware","3":"190","4":"63036"},{"1":"FL","2":"Florida","3":"2911","4":"50883"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -2902,7 +2902,7 @@ Neil Lund
 
 <section id="exercise" class="title-slide slide level2 center">
 <h2>Exercise</h2>
-
+<p><a href="https://github.com/Neilblund/GVPT628-Fall2024/blob/main/Week%204/ggplotting_exercise.Rmd" class="uri">https://github.com/Neilblund/GVPT628-Fall2024/blob/main/Week%204/ggplotting_exercise.Rmd</a></p>
 </section>
 </section>
 <section>
@@ -2920,7 +2920,7 @@ Neil Lund
 </div>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href></a><span class="fu">Sys.time</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] &quot;2024-09-17 16:59:22 EDT&quot;</code></pre>
+<pre><code>[1] &quot;2024-09-17 17:28:43 EDT&quot;</code></pre>
 </div>
 </div>
 </section>
@@ -3062,6 +3062,133 @@ Neil Lund
 
 <section id="working-with-dates-programmatically" class="title-slide slide level2 center">
 <h2>Working with dates programmatically</h2>
+<p><a href="https://github.com/Neilblund/GVPT628-Fall2024/blob/main/Week%204/dates.Rmd" class="uri">https://github.com/Neilblund/GVPT628-Fall2024/blob/main/Week%204/dates.Rmd</a></p>
+</section>
+</section>
+<section>
+<section id="recoding" class="title-slide slide level1 center">
+<h1>Recoding</h1>
+
+</section>
+<section id="section" class="title-slide slide level2 center">
+<h2></h2>
+<p>We’ll often need to make categorical variables have a different set of categories. We can use <code>case_when</code> to accomplish this.</p>
+</section>
+
+<section id="anes-2020-data" class="title-slide slide level2 center">
+<h2>ANES 2020 data</h2>
+<p>We can use the 2020 ANES data as an example</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href></a><span class="co">#install_github(&quot;jamesmartherus/anesr&quot;)</span></span>
+<span id="cb30-2"><a href></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb30-3"><a href></a><span class="fu">library</span>(anesr)</span>
+<span id="cb30-4"><a href></a></span>
+<span id="cb30-5"><a href></a></span>
+<span id="cb30-6"><a href></a><span class="fu">data</span>(<span class="st">&quot;timeseries_2020&quot;</span>)</span>
+<span id="cb30-7"><a href></a></span>
+<span id="cb30-8"><a href></a>timeseries_2020<span class="ot">&lt;-</span>timeseries_2020<span class="sc">|&gt;</span></span>
+<span id="cb30-9"><a href></a>    <span class="fu">mutate</span>(<span class="at">partyid =</span> haven<span class="sc">::</span><span class="fu">as_factor</span>(V201231x) )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+
+<section id="anes-2020-data-1" class="title-slide slide level2 center">
+<h2>ANES 2020 data</h2>
+<p><a href="https://electionstudies.org/data-center/2020-time-series-study/">Documentation</a></p>
+<p>Here’s the party ID variable, how do we recode this to a 3 category measure?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href></a>timeseries_2020<span class="sc">|&gt;</span></span>
+<span id="cb31-2"><a href></a>  <span class="fu">group_by</span>(partyid)<span class="sc">|&gt;</span></span>
+<span id="cb31-3"><a href></a>  <span class="fu">summarize</span>(<span class="at">n =</span> <span class="fu">n</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source type="application/json">
+{"columns":[{"label":["partyid"],"name":[1],"type":["fct"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"-9. Refused","2":"31"},{"1":"-8. Don't know","2":"4"},{"1":"1. Strong Democrat","2":"1961"},{"1":"2. Not very strong Democrat","2":"899"},{"1":"3. Independent-Democrat","2":"975"},{"1":"4. Independent","2":"968"},{"1":"5. Independent-Republican","2":"879"},{"1":"6. Not very strong Republican","2":"833"},{"1":"7. Strong Republican","2":"1730"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+</section>
+
+<section id="anes-2020-data-2" class="title-slide slide level2 center">
+<h2>ANES 2020 data</h2>
+<p>In general terms, we want to make</p>
+<table>
+<thead>
+<tr class="header">
+<th>7 Category</th>
+<th>3 category</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Strong Republican</td>
+<td>Republican</td>
+</tr>
+<tr class="even">
+<td>Not Very Strong Republican</td>
+<td>Republican</td>
+</tr>
+<tr class="odd">
+<td>Independent Republican</td>
+<td>Republican</td>
+</tr>
+<tr class="even">
+<td>Independent</td>
+<td>Independent</td>
+</tr>
+<tr class="odd">
+<td>Independent Democrat</td>
+<td>Democrat</td>
+</tr>
+<tr class="even">
+<td>Not Very Strong Democrat</td>
+<td>Democrat</td>
+</tr>
+<tr class="odd">
+<td>Strong Democrat</td>
+<td>Democrat</td>
+</tr>
+</tbody>
+</table>
+</section>
+
+<section id="if-else" class="title-slide slide level2 center">
+<h2>if else</h2>
+<p>We can think of the problem as a series of if-else statements:</p>
+<pre><code>If party ID is Strong Republican then PID 3 is Republican,
+
+else if Party ID is Not Very Strong Republican then Republican, 
+
+else if ...</code></pre>
+</section>
+
+<section id="case_when" class="title-slide slide level2 center">
+<h2>case_when</h2>
+<p>The <code>case_when</code> function will implement this logic. We’ll state a condition, followed by a tilde and then a new label for all cases where that condition is true, then we’ll state additional outcomes if that condition is false.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href></a>timeseries_2020<span class="ot">&lt;-</span>timeseries_2020<span class="sc">|&gt;</span></span>
+<span id="cb33-2"><a href></a>  <span class="fu">mutate</span>(<span class="at">pid3cat =</span> <span class="fu">case_when</span>(<span class="fu">str_detect</span>(partyid, <span class="st">&quot;Democrat&quot;</span>) <span class="sc">~</span> <span class="st">&quot;Democrat&quot;</span>,</span>
+<span id="cb33-3"><a href></a>                             <span class="fu">str_detect</span>(partyid, <span class="st">&quot;Republican&quot;</span>) <span class="sc">~</span> <span class="st">&quot;Republican&quot;</span>,</span>
+<span id="cb33-4"><a href></a>                             partyid <span class="sc">==</span> <span class="st">&quot;4. Independent&quot;</span> <span class="sc">~</span> <span class="st">&quot;Independent&quot;</span></span>
+<span id="cb33-5"><a href></a>                             ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+
+<section id="checking-your-work" class="title-slide slide level2 center">
+<h2>checking your work</h2>
+<p>This tends to be one of the more error prone methods, so always check your work afterword by comparing the old and new variables to each other. One easy way to do that is with <code>select</code> and <code>distinct</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href></a>timeseries_2020<span class="sc">|&gt;</span></span>
+<span id="cb34-2"><a href></a>  <span class="fu">select</span>(partyid, pid3cat)<span class="sc">|&gt;</span></span>
+<span id="cb34-3"><a href></a>  <span class="fu">distinct</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source type="application/json">
+{"columns":[{"label":["partyid"],"name":[1],"type":["fct"],"align":["left"]},{"label":["pid3cat"],"name":[2],"type":["chr"],"align":["left"]}],"data":[{"1":"7. Strong Republican","2":"Republican"},{"1":"4. Independent","2":"Independent"},{"1":"3. Independent-Democrat","2":"Democrat"},{"1":"6. Not very strong Republican","2":"Republican"},{"1":"2. Not very strong Democrat","2":"Democrat"},{"1":"1. Strong Democrat","2":"Democrat"},{"1":"5. Independent-Republican","2":"Republican"},{"1":"-9. Refused","2":"NA"},{"1":"-8. Don't know","2":"NA"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
 <div class="quarto-auto-generated-content">
 <div class="footer footer-default">
 
