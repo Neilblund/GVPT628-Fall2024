@@ -30,6 +30,14 @@ two_party_vote<-
   group_by(state, candidate_name)|>
   summarise(votes = sum(votes))|>
   pivot_wider(names_from=candidate_name, values_from=votes)
+
+
+median_income <- get_acs(geography = "state", variables = c(median_income = "B19013_001"), year = 2020)
+
+voteshares<-two_party_vote|>
+  left_join(median_income, by=join_by(state == NAME))
+
+
 ```
 # Q1
 
