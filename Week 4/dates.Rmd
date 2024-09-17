@@ -10,12 +10,12 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, message=FALSE)
 ```
 
 Load in data on races from FiveThirtyEight
 
-```{r}
+```{r, warning=FALSE}
 library(tidyverse)
 url <- 'https://raw.githubusercontent.com/fivethirtyeight/election-results/refs/heads/main/races.csv'
 races<-read_csv(url)
