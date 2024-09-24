@@ -1,0 +1,235 @@
+---
+title: "Python from R"
+output: html_document
+date: "2024-09-23"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(reticulate)
+
+
+```
+
+
+
+```{r}
+
+
+
+```
+
+
+```{r}
+#install.packages("httr2")
+library(httr2)
+library(tidyverse)
+battle_deaths<-request('https://ucdpapi.pcr.uu.se/api/battledeaths/23.1?pagesize=10&Country=365')|>
+  req_perform()|>
+  resp_body_json()
+
+bl<-unlist(battle_deaths$Result)|>
+  enframe()|>
+  pivot_wider(names_from = name)
+  
+
+result<-bind_rows(battle_deaths$Result)
+
+
+
+
+```
+
+
+
+# Comparing R and Python
+
+
+
+Python, like R, is an interpreted language that can be used interactively. A lot of the same caveats about loops and memory usage will apply to Python just as much as they do to R. 
+
+In terms of syntax, Python code can look a lot like R code. For instance: using functions will follow the same `function(arguments)` type of syntax that we've seen with R. (you might also notice that we can add comments the same way)
+
+```{python}
+# printing hello
+print("hello")
+
+
+```
+
+
+Listing all of the differences between R and Python syntax isn't really feasible, but there are some differences that will pop out immediately that we can discuss here.
+
+
+## 1. Indexing
+
+Python allows you to use the `[]` to get a subset of some data, but Python uses 0-based indexing, so the first item in a list is the 0th element. 
+
+```{python}
+mylist = ["a", "b", "c", "d"]
+
+mylist[0]
+
+mylist[1]
+
+```
+
+We can also access multiple elements using a range like `[0:3]`, but the range will stop before the second number, so `[0:4]` means elements 0,1,2,3 instead of 0,1,2,3,4:
+
+
+```{python}
+mylist[0:3]
+
+```
+
+
+## 2. Loops, control flow and functions
+
+Python uses indentation to do a lot of the stuff you would do with `{}` in R. For instance, here's how we would loop through an R list:
+
+```{r}
+
+vec<-c("fee", "fi", "fo","fum")
+
+for(i in vec){
+  print(i)
+}
+
+```
+And here's how we would do it in Python:
+
+```{python}
+vec = ["fee", "fi", "fo", "fum"]
+
+for i in vec:
+  print(i)
+
+```
+Here's how we would create a function in R
+
+```{r}
+numvec<-c(1, 1.5, 10, 11, -1,13)
+
+se<-function(x){
+  x<-sd(x)/sqrt(length(x))
+  return(x)
+}
+
+se(numvec)
+sd(numvec)
+
+```
+And here's an equivalent in Python: 
+
+```{python}
+
+import numpy as np # importing numpy 
+
+numvec = [1, 1.5, 10, 11, -1,13]
+
+
+def se(x):
+  s=np.std(x)/np.sqrt(len(x)-1)
+  return(s)
+
+se(numvec)
+
+```
+
+
+## 3. Methods and classes
+
+
+## 4. Modules
+
+
+Python packages work very similarly to R packages with a couple of minor differences. 
+
+First, package installation will usually be done outside of Python using the pip command. You can do this by opening a terminal window and typing in `pip install [packagename]` or you can do it from within R by opening a terminal tab and typing the same. 
+
+
+Alternatively, you can use the `py_install` function from the reticulate package: 
+
+```{r, eval=FALSE}
+library(reticulate)
+py_install('requests', python_version='python3')
+
+
+```
+
+
+
+To use a function from a Python module, you'll usually need to prefix the module name followed by a `.` and then the function name. ie. `numpy.std()` or `pandas.mean()`. To make this a little less verbose, you can give an alias to the package by importing like `import [package] as [alias]`, then you can use that alias in place of the full name of the package:
+
+```{python}
+
+
+import requests as req
+
+# to use the get function, I need to 
+ucdp_raw = req.get('https://ucdpapi.pcr.uu.se/api/battledeaths/23.1?pagesize=10&Country=365')
+
+ucdp_json = ucdp_raw.json()
+
+
+```
+
+
+
+
+
+
+## 5. General design philosophy
+
+
+Python is more "programmer oriented" where R is more oriented towards statisticians. So things that seem simple in one language can be convoluted in another. You can see an example of this where we calculated the standard error above: we need to import the `numpy` package just to access a function to calculate the mean and standard deviation because these aren't built-in to the standard Python installation. 
+
+
+Another notable difference is the lack of anything like R's data frame in regular Python, which makes it hard to do much with data analysis. Fortunately, the `pandas` package provides this for us, along with a number of functions and operators that are analogous to the kinds of data manipulation that we can do in dplyr. 
+
+
+```{python}
+
+
+
+
+conflict_data = pd.json_normalize(ucdp_json["Result"])
+
+
+conflict_data.head()
+
+```
+
+
+## Working between R and Python
+
+The `reticulate` package allows you to reference objects in either the R or Python environment, so you can pass results back and forth between the languages. 
+
+I can create this in R: 
+
+```{r}
+set.seed(100)
+rvector = rnorm(10)
+
+```
+
+
+And then I can access it in a Python chunk by writing `r.[object name]`: 
+
+```{python}
+
+pvec = sum(r.rvector)
+
+pvec
+
+```
+
+Then I can grab the object back from Python by running `py$[object name]`: 
+
+```{r}
+
+py$pvec
+
+```
+
+This kind of workflow might not be ideal for huge data sets, but it works fairly well for the kinds of quick trips to Python that we might make in this course. 
