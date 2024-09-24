@@ -1,0 +1,193 @@
+---
+title: "weights and recoding"
+output: 
+  html_document:
+      df_print: paged
+      code_download: true
+      toc: true
+      toc_depth: 3
+      toc_float: true
+---
+
+
+We'll use the ANES cumulative time series data to explore changes in people's views of the U.S. political parties over time. Early public opinion research found that many people had a surprisingly difficult time identifying meaningful differences between the parties or correctly placing them along a left-right axis. However, there are reasons to suspect that this is no longer the case today.
+
+You can download the ANES cumulative time series file from this URL: <https://electionstudies.org/data-center/anes-time-series-cumulative-data-file/>. You'll need to create an account (you can use your UMD email address) and download the Stata formatted version of the file. 
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Load the required libraries
+
+```{r, warning=FALSE, message=FALSE}
+
+library(tidyverse)
+library(haven)
+
+```
+
+You should have a zip file with a name like `anes_timeseries_cdf_stata_20220916.zip`. You can either unzip this yourself and then use `read_dta` to import the relevant file, or you can do the unzipping from within R by running the code below: 
+
+
+```{r, cache=TRUE}
+
+# unz will extract the .dta file from the zipped folder 
+anes  <- haven::read_dta(unz('./anes_timeseries_cdf_stata_20220916.zip', "anes_timeseries_cdf_stata_20220916.dta"))
+# convert the stata factors to R format
+anes<-haven::as_factor(anes)
+
+```
+
+This is a fairly large file. You'll want to keep in mind R's "copy-on-modify" behaviors and avoid creating a bunch of extra copies of these data. If you find things are sluggish, you might try removing some variables with `rm(variable_name)` and then using `gc()` to claw back some memory.
+
+# Setup
+
+Consult the codebook and appendices to find more information about the variable names and weighting procedures. You'll notice that most of the variables are named something wacky like `VCF0502`, so you might want to use `rename` or `mutate` to give more descriptive names to the variables you plan to use in your analysis.
+
+```{r}
+anes<-anes|>
+  # alternative  rename(year = VCF0004) would modify the column name in place instead of making a copy
+  mutate(year = VCF0004,
+         full.weight = VCF0009z
+         )
+
+
+```
+
+Moreoever, you'll often find that the response labels are too long to fit on a graph or table, or they just contain formatting and abbreviations you don't want. In these cases, you can use a `case_when` statement to relabel categories. (In the code below, I'm using `str_detect` to identify variable labels without having to type out the entire label name.)
+
+When all is said and done, we should get something that looks like this:
+
+| original variable                                      | Party Placements          |
+|--------------------------------------------------------|---------------------------|
+| 0\. NA; no Post IW; telephone IW (1984); form          | NA                        |
+| 1\. Yes, Democrats more conservative                   | Yes, Democrats            |
+| 2\. Yes, Republicans more conservative                 | Yes, Republicans          |
+| 9\. No, both the same; DK; no guess (1970-1976); other | No, Both Same, Don't Know |
+
+```{r}
+
+
+anes<-anes|>
+  mutate(`Party Placements` = case_when(
+    str_detect(VCF0502, "^1.") ~ "Yes, Democrats", 
+    str_detect(VCF0502, "^2.") ~ "Yes, Republicans", 
+    str_detect(VCF0502, "^9.") ~ "No, Both Same, Don't Know"
+               ))
+
+
+
+```
+
+Now we can compare the new values to the old ones to see if we got things right:
+
+```{r}
+
+anes|>
+  select(`Party Placements`, VCF0502)|>
+  distinct()
+
+
+```
+
+You'll want to go ahead and remove rows with `NA` values on the variables of interest. You can do this with a filter:
+
+```{r, eval=FALSE}
+anes_cols <-anes|>
+  filter(!is.na(`Party Placements`))
+
+
+```
+
+Or you could use the `drop_na` function to drop missing values for multiple variables:
+
+```{r}
+
+anes_cols<-anes|>
+  drop_na(`Party Placements`, year, full.weight)
+
+```
+
+(Keep in mind, you probably don't want to do this to the original data set because you run the risk of removing stuff you might need later)
+
+
+Now use the `anes_cols` data to answer the questions below: 
+
+# Q1
+
+**Calculate the weighted proportion of each response to the question by year.**
+
+```{r}
+#Q1
+
+
+
+```
+
+
+# Q2
+
+**Create a plot to show how this has changed over time. (there are a number of ways to present this. `geom_smooth` or `geom_area` may be better for viewing time trends, but `geom_bar` or `geom_line` could also work.**
+
+```{r}
+#Q2
+  
+
+```
+
+# Q3
+
+**Are these trends different for college-educated vs. non-college respondents? Find the variable for educational attainment by consulting the codebook, then create a variable that just indicates whether the respondent has a college degree and use it to re-calculate the relationship from Q1 separately for each group.**
+
+(Keep in mind that the proportions should sum up to 100% for each year/education level. Otherwise your interpretation will be biased by educational trends since the 1960s.)
+
+```{r}
+#Q3
+
+
+```
+
+Note: you can use `facet_wrap` or `facet_grid` to create a plot that shows the same relationship at different levels of a categorical variable, or you can color code variables by adding `color=x` or `fill=x` as an argument in the `aes` part of the ggplot call.
+
+Adding a facet to a ggplot object just requires you to add `facet_wrap(~x)` to it, where `x` is some categorical variable that exists in the data set you're plotting.
+
+
+```{r}
+#Q4
+  
+
+```
+
+
+
+# Note on getting confidence intervals
+
+ANES doesn't provide the Primary Sampling Unit information for the cumulative time series file, but you still would want to account for the survey design when trying to calculate confidence intervals, standard errors, etc. 
+
+Here's an example of using this to plot 95% confidence intervals around the party placements variable for each year: 
+
+```{r, warning=FALSE, message=FALSE}
+
+library(srvyr)
+anes_svy <- anes |>
+  as_survey_design(data = anes, weight = full.weight) 
+
+
+weighted_result <- anes_svy|>
+  drop_na(`Party Placements`)|>
+  mutate(`proportion correct` =`Party Placements` == 'Yes, Republicans')|>
+  group_by(year) |>
+  summarise(survey_mean(`proportion correct`, vartype='ci'))
+  
+
+ggplot(weighted_result, aes(x=year, y=coef, ymin=`_low`, ymax=`_upp`))  + 
+  geom_point() +
+  geom_pointrange() +
+  theme_bw()
+
+
+```
+
+Since we don't have access to all the information needed to fully replicate the complex design of this survey, we should probably take these confidence intervals with a grain of salt! But the eyeball test indicates that the trend here is not just attributable to random sampling error. People have actually gotten better at answering this question. 
