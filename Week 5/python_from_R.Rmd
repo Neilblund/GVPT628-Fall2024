@@ -9,16 +9,13 @@ output:
       toc_float: true
 ---
 
-```{=html}
-<!--When using Python in Rmarkdown, add:
-    library(reticulate) 
-    use_virtualenv(...)
-    
-to the setup chunk. This ensures that you'll get the right versions and packages and whatnot.
-    -->
-```
+
+<!--When using Python in Rmarkdown, add: library(reticulate) use_virtualenv(...)
+to the setup chunk. This ensures that you'll get the right versions and packages
+and whatnot.-->
+
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE)
 library(reticulate)
 use_virtualenv("APAN-Python")
 
@@ -44,10 +41,6 @@ battle_deaths<-request('https://ucdpapi.pcr.uu.se/api/battledeaths/23.1?pagesize
   req_perform()|>
   resp_body_json()
 
-bl<-unlist(battle_deaths$Result)|>
-  enframe()|>
-  pivot_wider(names_from = name)
-  
 
 result<-bind_rows(battle_deaths$Result)
 
@@ -126,7 +119,6 @@ se<-function(x){
 }
 
 se(numvec)
-sd(numvec)
 
 ```
 
@@ -134,13 +126,14 @@ And here's an equivalent in Python:
 
 ```{python}
 
-import numpy as np # importing numpy 
 
 numvec = [1, 1.5, 10, 11, -1,13]
 
 
 def se(x):
-  s=np.std(x)/np.sqrt(len(x)-1)
+  mu = sum(x)/len(x)
+  sigma = (sum([(i-mu)**2 for i in x])/len(x)) **.5
+  s = sigma/((len(x)-1)**.5)
   return(s)
 
 se(numvec)
@@ -149,17 +142,39 @@ se(numvec)
 
 ## 3. Methods and classes
 
+Methods and classes also exist in R, but they're a little more obscured. A method is a function that is associated with a particular class. So the `.lower` method is a function that only works on variables that have the string class:
+
+```{python}
+
+# this works
+words = 'SOME WORDS'
+words.lower()
+
+```
+
+```{python, error=TRUE}
+# but this gives an error message
+numbers = 1
+
+numbers.lower()
+```
+
+You'll often see method functions called using this `objectname.functionname()` syntax in Python.
+
 ## 4. Modules
 
 Python packages work very similarly to R packages with a couple of minor differences.
 
 First, package installation will usually be done outside of Python using the pip command. You can do this by opening a terminal window and typing in `pip install [packagename]` or you can do it from within R by opening a terminal tab and typing the same.
 
-Alternatively, you can use the `py_install` function from the reticulate package:
+Alternatively, you can use the `virtualenv_install` function from the reticulate package to install a package in a virtual Python environment, or use `py_install` to install the package in your native Python installation
 
 ```{r, eval=FALSE}
 library(reticulate)
-py_install('requests', python_version='python3')
+
+virtualenv_install(envname="APAN-Python", "pandas")
+
+
 
 
 ```
@@ -167,37 +182,38 @@ py_install('requests', python_version='python3')
 To use a function from a Python module, you'll usually need to prefix the module name followed by a `.` and then the function name. ie. `numpy.std()` or `pandas.mean()`. To make this a little less verbose, you can give an alias to the package by importing like `import [package] as [alias]`, then you can use that alias in place of the full name of the package:
 
 ```{python}
-
-
 import requests as req
 
-# to use the get function, I need to 
-ucdp_raw = req.get('https://ucdpapi.pcr.uu.se/api/battledeaths/23.1?pagesize=10&Country=365')
+battledeaths = req.get('https://ucdpapi.pcr.uu.se/api/battledeaths/23.1?pagesize=10&Country=365')
 
-ucdp_json = ucdp_raw.json()
+bd_json = battledeaths.json()
 
 
 ```
 
 ## 5. General design philosophy
 
-Python is more "programmer oriented" where R is more oriented towards statisticians. So things that seem simple in one language can be convoluted in another. You can see an example of this where we calculated the standard error above: we need to import the `numpy` package just to access a function to calculate the mean and standard deviation because these aren't built-in to the standard Python installation.
+Python is more "programmer oriented" where R is more oriented towards statisticians. So things that seem simple in one language can be convoluted in another. You can see an example of this where we calculated the standard error above: we had to write a lot more code because there's no native Python function for calculating something as simple as mean or standard deviation. Fortunately, we can usually overcome this with packages like `numpy` but it reflects a difference in the user base of the languages. 
 
-Another notable difference is the lack of anything like R's data frame in regular Python, which makes it hard to do much with data analysis. Fortunately, the `pandas` package provides this for us, along with a number of functions and operators that are analogous to the kinds of data manipulation that we can do in dplyr.
+One package that you'll see a lot in Python data analysis is `pandas`. It provides a lot of the same functionality that we get from the `tidyverse` packages in R, including a lot of support for easy split-apply-combine functions. 
+
 
 ```{python}
 
+import pandas as pd
 
-
-
-conflict_data = pd.json_normalize(ucdp_json["Result"])
+conflict_data = pd.json_normalize(bd_json["Result"])
 
 
 conflict_data.head()
 
 ```
 
+
+
 ## Working between R and Python
+
+
 
 The `reticulate` package allows you to reference objects in either the R or Python environment, so you can pass results back and forth between the languages.
 
