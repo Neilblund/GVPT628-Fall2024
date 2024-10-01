@@ -14,6 +14,8 @@ knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
 current_congress_number<- 118
 ```
 
+# Goal
+
 Our goal in this analysis is to get the age information about all members of the current congressional delegation. We can use the member_details endpoint to get detailed information about a member, but we need to know a members `bioguideId` in order to get their year of birth, so we're actually going to need to send queries to multiple different endpoints in order to assemble this data all in one place.
 
 Sign up for an API key here: <https://api.congress.gov/sign-up/>
@@ -21,6 +23,18 @@ Sign up for an API key here: <https://api.congress.gov/sign-up/>
 Query documentation: <https://api.congress.gov/>
 
 Detailed data documentation: <https://github.com/LibraryOfCongress/api.congress.gov/tree/main/Documentation>
+
+## httr2 functions
+
+| command                 | description                                                                   |
+|-------------------------|-------------------------------------------------------------------------------|
+| `request()`             | creates a request object                                                      |
+| `req_url_path_append()` | adds stuff to the URL path "appends with /"                                   |
+| `req_url_query()`       | takes a named list and adds URL parameters                                    |
+| `req_perform()`         | sends a prepared request. (Nothing is requested until you run this function!) |
+| `resp_body_json()`      | takes a json formatted response and converts it to an R list.                 |
+
+# Setting up the request
 
 Start by loading the relevant libraries and creating a base URL that we can re-use. Since we'll always need to send our API key, you can go ahead and add this as a parameter to the base URL object:
 
@@ -56,8 +70,8 @@ Examine the structure of `current_congress` response and extract the number of t
 
 ```
 
-According to the [API documentation](https://api.congress.gov/) we can extract member information from the `member` endpoint. The query should look something like this: \
-https://api.congress.gov/v3/member/congress/118?api_key=[INSERT_KEY]
+According to the [API documentation](https://api.congress.gov/) we can extract member information from the `member` endpoint. The query should look something like this:\
+[https://api.congress.gov/v3/member/congress/118?api_key=[INSERT_KEY]](https://api.congress.gov/v3/member/congress/118?api_key=%5BINSERT_KEY%5D){.uri}
 
 To make our code more future-proof, we can replace `118` with the `current_congress_number` variable that we created in the prior step.
 
@@ -133,8 +147,6 @@ congress_df <- data.frame('name'=character(nrows),
 
 
 ```
-
-
 
 ## Question 3A
 
