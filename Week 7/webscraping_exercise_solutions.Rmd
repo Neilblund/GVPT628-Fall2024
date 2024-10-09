@@ -1,0 +1,181 @@
+---
+title: "Webscraping Exercise"
+output: 
+  html_document:
+      df_print: paged
+      code_download: true
+      toc: true
+      toc_depth: 3
+      toc_float: true
+---
+
+```{r setup, include=FALSE}
+
+
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
+```
+
+```{r}
+library(tidyverse)
+library(rvest)
+
+```
+
+Goal: we're going to create a data frame with all of the current travel advisories on the U.S. State Department website, along with their full text and the relevant advisory tags. We'll use the `rvest` package to accomplish this. 
+
+Start by reading in the data
+
+```{r}
+
+url<-'https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories.html/'
+
+result<-read_html(url)
+
+```
+
+The travel advisories are in an HTML table object. Fortunately, `rvest` offers a simple function to extract and re-format an HTML table: `html_table()`
+
+```{r}
+url<-'https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories.html/'
+
+travel_advisories<-result|>
+  html_element('table')|>
+  html_table()
+
+```
+
+## Question 1
+
+We have the table object but how do we extract the hyperlinks? Use the Selector Gadget to get a css selector statement and extract the links to each travel alert.
+
+```{r}
+# Q1 code
+
+url<-'https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories.html/'
+
+result<-read_html(url)
+
+links<-result|>
+  html_elements("td:nth-child(1) a")|> # put an expression here
+  html_attr("href")
+
+
+head(links) # look at the first few results and see if you're getting something useful
+
+
+
+
+```
+
+
+
+We have relative URLs, but remember that we can complete a relative URL with the function below:
+
+```{r, eval=FALSE}
+url<-'https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories.html/'
+
+abs_path<-xml2::url_absolute(links, url)
+
+travel_advisories$links<-abs_path
+
+```
+
+Now we have a list of links. These will all have similar formatting, so if you figure out how to scrape one you can probably grab the rest without much problem.
+
+## Question 2
+
+Visit the first link and write a selector statement to extract the alert text and the threat tags and assign them to objects in R.
+
+```{r}
+# Q2 code
+page<-read_html('https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/afghanistan-advisory.html')
+
+text<-page|>
+  html_elements(".tsg-rwd-emergency-alert-text")|>
+  html_text()
+# an expression to retrieve the text
+
+alert_tags<-page|>
+  html_elements(".showThreat")|>
+  html_text()
+  
+
+alert_titles<-page|>
+  html_elements(".showThreat")|>
+  html_attr("title")
+# an expression to retrieve alert tags
+
+
+```
+
+## Question 3
+
+Now: you already have a data frame that can store this object, so you just need to create two empty columns and then create a loop that will visit each link, extract the text and advisory tags, and place them in the appropriate cell. Be sure to put a short pause between each iteration of the loop.
+
+```{r}
+travel_advisories$text<-NA
+travel_advisories$tags<-NA
+```
+
+Hint: Since there can be multiple "threat" tags for a single advisory, you can create a list column in your loop like this:
+
+```{r, eval=FALSE}
+# inside the loop: 
+travel_advisories$text[i] <- text
+travel_advisories$tags[i] <- list(alert_tags)
+```
+
+```{r, eval=FALSE}
+# Q3 code
+# create a loop to iterate through each link and extract the data
+
+
+for(i in 1:nrow(travel_advisories)){
+  
+  # now visit a link: 
+  advisory<-read_html(travel_advisories$links[i])
+  # extract the text of the advisory: 
+  text<-advisory|>
+    html_elements('.tsg-rwd-emergency-alert-text')|>
+    html_text()
+  
+  
+  # extract the threats
+  threats<-advisory|>
+    html_elements('.showThreat')|>
+    html_attr('data-tooltip')|>
+    stringr::str_squish()
+  
+ 
+  
+  travel_advisories$text[i] <- text
+  # add the threat tags as a list column 
+  travel_advisories$tags[i] <- list(threats)
+  # adding print i just lets us see how the loop is progressing
+  print(i)
+  # you may need to put a "sleep" period between requests: 
+  Sys.sleep(.3)
+  
+}
+
+
+```
+
+
+Finally, once we have some data, we can use `unnest` to unpack that list column that we made for tags. 
+
+`unnest` will repeat the data in each row `n` times, once for each tag. So if a country has five alert tags, then it will have five rows: 
+
+```{r, eval=FALSE}
+advisories<-bind_rows(travel_advisories)|>
+  unnest(tags)
+
+
+head(advisories$tags)
+
+
+
+```
+
+
+
