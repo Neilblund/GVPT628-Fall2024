@@ -1,13 +1,28 @@
 ---
 title: "SQL Exercise"
-output: html_document
-date: "2024-10-15"
+output: 
+  html_document:
+      df_print: paged
+      code_download: true
+      toc: true
+      toc_depth: 3
+      toc_float: true
 ---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning= FALSE, message=FALSE)
+
+```
+
 
 
 First create a database connection in R: 
 
 ```{r}
+library(tidyverse)
+library(DBI)
+
 database <- dbConnect(RSQLite::SQLite(), "C:/Users/neilb/navco_db.db") 
 
 dbListTables(database)
@@ -25,7 +40,7 @@ SELECT * FROM NAVCO_12 LIMIT 10
 
 If you want to be able to access the results of a query in R, add the output.var option to the sql chunk: 
 
-```{sql, output.var = tenrows}
+```{sql, output.var = 'tenrows'}
 #| connection = database
 
 SELECT * FROM NAVCO_12 LIMIT 10
@@ -44,39 +59,23 @@ dbGetQuery(database, "SELECT * FROM NAVCO_12 LIMIT 10")
 
 Get the total number of rows in NAVCO 1.2
 
-```{sql}
 
-
-```
 
 # Question 2
 
 Calculate the average %  participation for violent and non-violent movements. Put your result in an R variable and then create a barplot showing your results
 
-```{sql}
-
-
-```
 
 
 # Question 3
 
 Do any countries have more than one maximalist campaign? Which had the highest?
 
-```{sql}
-
-
-```
 
 # Question 4
 
 Use SQL or R to produce a count of each type of campaign
 
-
-```{sql}
-
-
-```
 
 
 
