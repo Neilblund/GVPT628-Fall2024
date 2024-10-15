@@ -1,0 +1,82 @@
+---
+title: "SQL Exercise"
+output: html_document
+date: "2024-10-15"
+---
+
+
+First create a database connection in R: 
+
+```{r}
+database <- dbConnect(RSQLite::SQLite(), "C:/Users/neilb/navco_db.db") 
+
+dbListTables(database)
+```
+
+Use this code to view the first few rows
+
+```{sql}
+#| connection = database
+
+SELECT * FROM NAVCO_12 LIMIT 10
+
+```
+
+
+If you want to be able to access the results of a query in R, add the output.var option to the sql chunk: 
+
+```{sql, output.var = tenrows}
+#| connection = database
+
+SELECT * FROM NAVCO_12 LIMIT 10
+
+```
+
+Alternatively, you can just use the `dbGetQuery` function from R: 
+
+```{r}
+
+dbGetQuery(database, "SELECT * FROM NAVCO_12 LIMIT 10")
+
+```
+
+# Question 1
+
+Get the total number of rows in NAVCO 1.2
+
+```{sql}
+
+
+```
+
+# Question 2
+
+Calculate the average %  participation for violent and non-violent movements. Put your result in an R variable and then create a barplot showing your results
+
+```{sql}
+
+
+```
+
+
+# Question 3
+
+Do any countries have more than one maximalist campaign? Which had the highest?
+
+```{sql}
+
+
+```
+
+# Question 4
+
+Use SQL or R to produce a count of each type of campaign
+
+
+```{sql}
+
+
+```
+
+
+

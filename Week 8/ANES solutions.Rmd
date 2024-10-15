@@ -1,0 +1,264 @@
+---
+title: "ANES Solutions"
+output: 
+  html_document:
+      df_print: paged
+      code_download: true
+      toc: true
+      toc_depth: 3
+      toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
+```
+
+Some alternative code to import the data
+```{r}
+library(tidyverse)
+library(paletteer)
+library(anesr)
+
+data("timeseries_2020")
+#Data import---------
+
+
+# convert the stata factors to R format
+anes<-haven::as_factor(timeseries_2020)
+
+rm(timeseries_2020)
+
+```
+
+## Data prep
+
+We can start by renaming the relevant variables so that we can more easily keep track of what we're analyzing.
+
+```{r}
+
+
+# V201144x for approval of president's handling of Covid-19
+# V201624 for testing positive for Covid-19
+# V201625 for Covid-19 symptoms
+# V201150x  for approving of local government handling of Covid-19
+# V201231x for party ID
+# V200010a for the weighting variable
+
+anes<-anes|>
+  rename(covid_approve_trump = V201144x,
+         covid_test = V201624,
+         covid_symptoms = V201625,
+         covid_approve_local = V201150x,
+         party_id = V201231x,
+         weight = V200010a)
+
+```
+
+## Question 1
+
+For question 1, we want to combine all of the cases where a person said they or someone in their household tested positive for Covid-19, or if they had symptoms of it. We can do this in a number of different ways, and we may get slightly different answers depending on how we handle it. For this example, I'm going to treat non responses as `NA`. There's some cases where it might make sense to leave Don't Know/Non-Applicable responses in place, but if we can eliminate some extraneous categories here we can make it much easier to interpret our results. 
+
+```{r}
+
+
+anes<-anes|>
+  mutate(has_covid = case_when(covid_test == '1. Someone in my household tested positive'| 
+                               covid_symptoms == '1. Suspected of having COVID-19' ~  "had Covid",
+                               covid_test == '2. No one tested positive'| 
+                               covid_symptoms == '2. No one has been suspected of having COVID-19' ~  "did not have Covid",
+                               )
+         
+         )
+
+```
+
+As always, we want to double-check our results after we recode the data to ensure we've got what we want: 
+
+```{r}
+# now check results:
+anes|>
+  select(covid_test, covid_symptoms, has_covid)|>
+  distinct()|>
+  arrange(has_covid)
+
+
+```
+Now we just need to calculate the weighted % of respondents who had Covid:
+
+```{r}
+
+anes|>
+  count(has_covid, wt=weight)|>
+  drop_na()|>
+  add_count(wt=n, name ='total')|>
+  mutate(proportion = n/total)
+  
+
+
+
+```
+
+
+## Question 2
+
+
+We can also drop non-responses for the Trump approval question and then calculate the weighted % of Trump support among people who had Covid and those who didn't:
+
+
+
+```{r}
+# plot for Trump
+approve_pres_counts<-anes|>
+  filter(!str_detect(covid_approve_trump, "^-"))|>
+  count(has_covid, covid_approve_trump, wt=weight)|>
+  drop_na()|>
+  add_count(has_covid, wt=n, name ='total')|>
+  mutate(proportion = n/total)
+
+```
+
+Finally, I'll use these results to creat a ggplot object. The first three lines are all I need to create the basic plot, but the rest of the code rescales, changes the color palette, and adds axis labels: 
+```{r}
+
+
+ggplot(approve_pres_counts, aes(x=has_covid, 
+                                y=proportion, 
+                                fill=covid_approve_trump)) +
+  geom_bar(stat='identity') +
+  scale_y_continuous(labels = scales::percent) +
+  paletteer::scale_fill_paletteer_d("lisa::OskarSchlemmer") +
+  theme_bw() +
+  xlab("Did R test positive for Covid/Have symptoms?") +
+  ylab("Percent") +
+  guides(fill=guide_legend(title="Trump Approval")) +
+  labs(title ='Trump approval by Covid Status', 
+       subtitle = "ANES 2020"
+       )
+
+
+
+
+  
+  
+```
+
+
+
+
+## Question 3/4
+
+Now I do the same for local government approval:
+
+```{r}
+
+# now for local government --- 
+approve_local_counts<-anes|>
+  filter(!str_detect(covid_approve_local, "^-") )|>
+  count(has_covid, covid_approve_local, wt=weight)|>
+  drop_na()|>
+  add_count(has_covid, wt=n, name ='total')|>
+  mutate(proportion = n/total)
+
+
+# plot for local government
+ggplot(approve_local_counts, aes(x=has_covid, y=proportion, fill=covid_approve_local)) + 
+  geom_bar(stat='identity') +
+    geom_bar(stat='identity') +
+  scale_y_continuous(labels = scales::percent) +
+  paletteer::scale_fill_paletteer_d("lisa::OskarSchlemmer") +
+  theme_bw() +
+  xlab("Did R test positive for Covid/Have symptoms?") +
+  ylab("Percent") +
+  guides(fill=guide_legend(title="Local Gov. Approval")) +
+  labs(title ='Local Gov approval by Covid Status', 
+       subtitle = "ANES 2020"
+       )
+
+```
+
+
+Its a little hard to isolate the "effect" here because respondents also report fundamentally higher levels of local gov approval compared to Trump approval. We can simplify this analysis by collapsing responses into "approve/disapprove", and then calculating the "effect" of covid status for local vs Trump approval:
+
+```{r}
+anes<-anes|>
+  mutate(approve_trump_2cat = case_when(
+    covid_approve_trump%in%c('1. Approve strongly', '2. Approve not strongly') ~ "approve",
+    covid_approve_trump%in%c('3. Disapprove not strongly', '4. Disapprove strongly') ~ "disapprove",
+  ),
+  
+  approve_local_2cat = case_when(
+    covid_approve_local%in%c('1. Approve strongly', '2. Approve not strongly') ~ "approve",
+    covid_approve_local%in%c('3. Disapprove not strongly', '4. Disapprove strongly') ~ "disapprove",
+  ))
+  
+
+```    
+
+
+
+
+```{r}
+approve_counts <- anes|>
+  select(has_covid, approve_trump_2cat, approve_local_2cat, weight)|>
+  drop_na()|>
+  pivot_longer(cols =c(approve_trump_2cat, approve_local_2cat), names_to='question', values_to='response')|>
+  group_by(has_covid, question, response)|>
+  summarise(n = sum(weight))|>
+  group_by(has_covid, question)|>
+  mutate(total = sum(n),
+         proportion  = n / total
+         )
+
+
+
+approve_counts|>
+  select(-n, -total)|>
+  pivot_wider(names_from = has_covid, values_from=proportion)|>
+  # subtract the had covid - did not have
+  mutate(difference = `had Covid` -`did not have Covid` )
+
+
+```
+
+
+# Question 5
+
+
+
+```{r}
+
+
+anes<-anes|>
+  mutate(
+    pid3cat = case_when(
+      party_id == "1. Strong Democrat" ~ "Democrat",
+      party_id == "2. Not very strong Democrat" ~ "Democrat",
+      party_id == "3. Independent-Democrat" ~ "Democrat",
+      party_id == "4. Independent" ~ "Independent",
+      party_id == "5. Independent-Republican" ~ "Republican",
+      party_id == "6. Not very strong Republican" ~ "Republican",
+      party_id == "7. Strong Republican" ~ "Republican"
+    ))
+
+
+approve_pres_counts<-anes|>
+  count(approve_trump_2cat, has_covid,pid3cat,  wt=weight)|>
+  drop_na()|>
+  add_count(has_covid,pid3cat, wt=n, name ='total')|>
+  mutate(proportion = n/total)
+
+
+##comparing across the columns----
+approve_pres_counts|>
+  select(-n, -total)|>
+  pivot_wider(names_from = c(has_covid), values_from =proportion)|>
+  mutate(difference = `had Covid` - `did not have Covid`)
+
+
+```
+
+
+
+
+
+
