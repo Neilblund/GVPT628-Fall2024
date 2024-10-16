@@ -92,6 +92,7 @@ anes|>
   drop_na()|>
   add_count(wt=n, name ='total')|>
   mutate(proportion = n/total)
+
   
 
 
@@ -103,8 +104,6 @@ anes|>
 
 
 We can also drop non-responses for the Trump approval question and then calculate the weighted % of Trump support among people who had Covid and those who didn't:
-
-
 
 ```{r}
 # plot for Trump
@@ -256,9 +255,5 @@ approve_pres_counts|>
 
 
 ```
-
-
-
-
 
 
