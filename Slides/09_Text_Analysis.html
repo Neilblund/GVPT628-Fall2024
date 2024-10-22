@@ -1511,12 +1511,16 @@ margin-right: 0; }
 
 </section>
 
-<section id="dictionaries" class="title-slide slide level1 center">
-<h1>Dictionaries</h1>
-
+<section id="methods" class="title-slide slide level1 center">
+<h1>Methods</h1>
+<ul>
+<li><p>Key Word In Context analysis can be used to get a subjective sense of the discussion around a term.</p></li>
+<li><p>Dictionary based analysis can be used to quantify or categorize sentiment or topics.</p></li>
+<li><p>Supervised models can be used to “train” a model that classifies documents or extracts useful information</p></li>
+<li><p>Unsupervised models can be used to categorize or classify documents without any “training” data</p></li>
+</ul>
 </section>
 
-<section>
 <section id="bag-of-words" class="title-slide slide level1 center">
 <h1>Bag of words</h1>
 <p>The “bag-of-words” model describes a method of simplifying language by ignoring syntax, puncuation and word order. Our end goal is to turn a document like</p>
@@ -1536,179 +1540,111 @@ margin-right: 0; }
 <tbody>
 <tr class="odd">
 <td>1</td>
-<td>3</td>
-<td>2</td>
 <td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>0</td>
 </tr>
 </tbody>
 </table>
-</section>
-<section id="tokenization" class="title-slide slide level2 center">
-<h2>Tokenization</h2>
-
+<p>In practice, an actual document term matrix will look a lot more “sparse”: there are far more words than documents. This sparsity is one of the fundamental problems for text analysis.</p>
 </section>
 
-<section id="reducing-sparsity" class="title-slide slide level2 center">
-<h2>Reducing Sparsity</h2>
-<p>A recurring problem for bag-of-words models is that we have a lot more words than documents, and most words aren’t actually all that informative once we ignore grammar and syntax. We’ll try to limit the amount of extraneous information we hold on to in a variety of ways.</p>
+<section>
+<section id="bag-of-words-1" class="title-slide slide level1 center">
+<h1>Bag of words</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href></a><span class="fu">library</span>(quanteda)</span>
+<span id="cb1-2"><a href></a></span>
+<span id="cb1-3"><a href></a>corpus<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="st">&quot;See Spot run&quot;</span>,  <span class="st">&quot;Spot runs fast&quot;</span>, <span class="st">&quot;Run Spot Run&quot;</span>, <span class="st">&quot;I see Spot&quot;</span>)</span>
+<span id="cb1-4"><a href></a></span>
+<span id="cb1-5"><a href></a><span class="co"># tokenization documents into words</span></span>
+<span id="cb1-6"><a href></a>spot_tokens<span class="ot">&lt;-</span><span class="fu">tokens</span>(corpus)</span>
+<span id="cb1-7"><a href></a><span class="co"># dfm build the document - term matrix</span></span>
+<span id="cb1-8"><a href></a>spot_dfm<span class="ot">&lt;-</span>spot_tokens<span class="sc">|&gt;</span></span>
+<span id="cb1-9"><a href></a>  <span class="fu">dfm</span>()</span>
+<span id="cb1-10"><a href></a></span>
+<span id="cb1-11"><a href></a></span>
+<span id="cb1-12"><a href></a>spot_dfm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Document-feature matrix of: 4 documents, 6 features (54.17% sparse) and 0 docvars.
+       features
+docs    see spot run runs fast i
+  text1   1    1   1    0    0 0
+  text2   0    1   0    1    1 0
+  text3   0    1   2    0    0 0
+  text4   1    1   0    0    0 1</code></pre>
+</div>
+</div>
+</section>
+<section id="stemming" class="title-slide slide level2 center">
+<h2>Stemming</h2>
+<p>Word endings (-ed, -ing, -es etc.) are also not especially informative in this context, so we’ll often drop these inflections and just retain the “stems”</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href></a><span class="fu">library</span>(quanteda)</span>
+<span id="cb3-2"><a href></a></span>
+<span id="cb3-3"><a href></a>spot_stemmed<span class="ot">&lt;-</span><span class="fu">dfm_wordstem</span>(spot_dfm)</span>
+<span id="cb3-4"><a href></a></span>
+<span id="cb3-5"><a href></a>spot_stemmed</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Document-feature matrix of: 4 documents, 5 features (45.00% sparse) and 0 docvars.
+       features
+docs    see spot run fast i
+  text1   1    1   1    0 0
+  text2   0    1   1    1 0
+  text3   0    1   2    0 0
+  text4   1    1   0    0 1</code></pre>
+</div>
+</div>
 </section>
 
 <section id="stop-word-removal" class="title-slide slide level2 center">
 <h2>Stop word removal</h2>
 <p>Terms like “if”, “and”, “a”, “the” etc. are grammatically important but not all that informative when we’re ignoring sentence structure.</p>
 <p>We usually have a pre-selected list of “stopwords” that we drop entirely, and we might add some of our own as well.</p>
-</section>
-
-<section id="stemming" class="title-slide slide level2 center">
-<h2>Stemming</h2>
-<p>Word endings (-ed, -ing, -es etc.) are also not especially informative in this context, so we’ll often drop these inflections and just retain the “stems”</p>
-<p>So: Protesters protest Protests all become “protest”</p>
-<div class="fragment">
-<p>Unfortunately, this may also mean protestant becomes protest, but this is the kind of error we might just have to live with.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href></a>spot_select <span class="ot">&lt;-</span> <span class="fu">dfm_select</span>(spot_stemmed, <span class="at">pattern =</span> <span class="fu">stopwords</span>(<span class="st">&quot;en&quot;</span>), <span class="at">selection =</span> <span class="st">&quot;remove&quot;</span>)</span>
+<span id="cb5-2"><a href></a>spot_select</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Document-feature matrix of: 4 documents, 4 features (37.50% sparse) and 0 docvars.
+       features
+docs    see spot run fast
+  text1   1    1   1    0
+  text2   0    1   1    1
+  text3   0    1   2    0
+  text4   1    1   0    0</code></pre>
+</div>
 </div>
 </section>
-<section id="lemmatization" class="slide level3">
-<h3>Lemmatization</h3>
-<p>A more computationally advanced alternative to word stemming is using lemmatization to get the actual “dictionary” version of a term using some syntactic information. We have algorithms that can do this, but they’re much slower and we need to run them before we do any other text cleaning.</p>
-</section>
-<section id="term-weighting" class="slide level3">
-<h3>Term weighting</h3>
+
+<section id="term-weighting" class="title-slide slide level2 center">
+<h2>Term weighting</h2>
 <p>Obviously some terms are more informative than others, and what is informative depends on the context.</p>
 <p>We have some simple algorithms that we can use to reflect this. One of the most widely used is Term Frequency - Inverse Document Frequency, which assigns a lower weight to terms that occur in a lot of documents and a higher weight to terms that occur a lot.</p>
-</section>
-<section id="section-1" class="slide level3">
-<h3></h3>
-</section>
-
-<section id="document-distances" class="title-slide slide level2 center">
-<h2>Document distances</h2>
-<p>How different are these documents? You can probably think of some rough metrics that you could calculate by hand.</p>
-<div class="columns">
-<div class="column" style="width:50%;">
-<blockquote>
-<p>Our Nation’s History is filled with the stories of brave men and women who gave everything they had to build America into the Greatest Nation in the History of the World. Generations of American Patriots have summoned the American Spirit of Strength, Determination, and Love of Country to overcome seemingly insurmountable challenges. The American People have proven time and again that we can overcome any obstacle and any force pitted against us.</p>
-</blockquote>
-</div><div class="column" style="width:50%;">
-<blockquote>
-<p>The Democratic National Committee wishes to acknowledge that we gather together to state our values on lands that have been stewarded through many centuries by the ancestors and descendants of Tribal Nations who have been here since time immemorial. We honor the communities native to this continent, and recognize that our country was built on Indigenous homelands. We pay our respects to the millions of Indigenous people throughout history who have protected our lands, waters, and animals.</p>
-</blockquote>
-</div>
-</div>
-</section>
-
-<section id="using-distance-to-infer-positions" class="title-slide slide level2 center">
-<h2>Using distance to infer positions</h2>
-
-</section>
-
-<section id="classification-problems" class="title-slide slide level2 center">
-<h2>Classification problems</h2>
-<p>Who said it?</p>
-</section>
-
-<section id="classification-problems-dictionaries" class="title-slide slide level2 center">
-<h2>Classification problems: dictionaries</h2>
-<p>Dictionary methods might work, but this is time-consuming and makes a lot of problematic assumptions:</p>
-<ul>
-<li><p>All terms usually have the same “weight”, but some terms are actually better at making predictions than others</p></li>
-<li><p>Predictive terms aren’t always obvious even to experts.</p></li>
-<li><p>The absence of a term might also be predictive, but dictionaries rarely account for this.</p></li>
-<li><p>Dictionaries <em>can be</em> constructed systematically and empirically tested, but they’re more often based on expert intuition.</p>
-<ul>
-<li>(this one might be a little unfair)</li>
-</ul></li>
-</ul>
-</section>
-
-<section id="classification-problems-a-predictive-model" class="title-slide slide level2 center">
-<h2>Classification problems: a predictive model</h2>
-<p>What if we thought about this like a regression model? The dependent variable is “Trump” and the independent variables are the terms in the sentence:</p>
-<p><span class="math display">\[P(Trump) =\beta_0 +   \text{chy-na} * \beta_1 + \text{crooked} * \beta_2 + \text{yuge} * \beta_3 ... \]</span> We can “train” a model using the data we’ve already classified, and then use the model parameters to predict the speaker of out-of-sample documents!</p>
-<div class="fragment">
-<p>Any issues?</p>
-</div>
-</section>
-
-<section id="classification-problems-the-curse-of-dimensionality" class="title-slide slide level2 center">
-<h2>Classification problems: the curse of dimensionality</h2>
-<ul>
-<li><p>In regression, the number of model parameters can never exceed the number of observations. And the number of documents rarely exceeds the number of unique words.</p></li>
-<li><p>So typical logistic and OLS regressions can’t really work in most text analysis contexts</p></li>
-</ul>
-</section>
-
-<section id="classification-problems-other-options" class="title-slide slide level2 center">
-<h2>Classification problems: other options</h2>
-<p>A non-exhaustive list:</p>
-<ul>
-<li><p>Penalized regressions (ridge, lasso and elastic net) constrain the coefficients, forcing less important predictors toward zero</p></li>
-<li><p>Naive Bayes classifiers calculate <span class="math inline">\(P(Trump|Word)\)</span> for every word in the corpus separately with the assumption that all of the terms are independent of each other. This is obviously wrong! But it still manages to work surprisingly well.</p></li>
-<li><p>Random Forests fit a bunch of regression trees on a smaller number of variables and then takes the majority vote from all of them</p></li>
-<li><p>K-Nearest Neighbors classifies new documents based on the classification of the most similar “K” documents with a known class.</p></li>
-</ul>
-<div class="fragment">
-<p>Ultimately the finer details of these approaches is less important than their empirical performance. Just try them all and find out which one is best.</p>
-</div>
-</section>
-</section>
-<section id="unsupervised-methods" class="title-slide slide level1 center">
-<h1>Unsupervised Methods</h1>
-
-</section>
-
-<section id="topic-models" class="title-slide slide level1 center">
-<h1>Topic Models</h1>
-<div class="columns">
-<div class="column" style="width:50%;">
-<p>Latent Dirichlet Allocation (LDA) or topic models, are a widely used method for unsupervised text analysis</p>
-<ul>
-<li><p>A “topic” is a probability distribution over words.</p></li>
-<li><p>A “document” has a probability distribution over topics.</p></li>
-</ul>
-</div><div class="column" style="width:50%;">
-<p>The Dirichlet Distribution is “the multivariate generalization of a beta distribution”. In essence, its the probability distribution for more than two categorical outcomes. So here we’ve got four outcomes, and we can use a random dirichlet distribution to create a random probability for each one occurring:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href></a>outcomes<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="st">&quot;red&quot;</span>, <span class="st">&quot;green&quot;</span>, <span class="st">&quot;blue&quot;</span>, <span class="st">&quot;yellow&quot;</span>)</span>
-<span id="cb1-2"><a href></a></span>
-<span id="cb1-3"><a href></a><span class="fu">set.seed</span>(<span class="dv">100</span>)</span>
-<span id="cb1-4"><a href></a>n <span class="ot">&lt;-</span> <span class="fu">length</span>(outcomes)</span>
-<span id="cb1-5"><a href></a>probs<span class="ot">&lt;-</span>gtools<span class="sc">::</span><span class="fu">rdirichlet</span>(<span class="dv">1</span>, <span class="fu">rep</span>(<span class="dv">1</span>, n))</span>
-<span id="cb1-6"><a href></a><span class="fu">colnames</span>(probs) <span class="ot">&lt;-</span> outcomes</span>
-<span id="cb1-7"><a href></a>probs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href></a>spot_select<span class="sc">|&gt;</span></span>
+<span id="cb7-2"><a href></a>  <span class="fu">dfm_tfidf</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>            red     green      blue    yellow
-[1,] 0.08491507 0.3691922 0.2393482 0.3065446</code></pre>
+<pre><code>Document-feature matrix of: 4 documents, 4 features (37.50% sparse) and 0 docvars.
+       features
+docs        see spot       run    fast
+  text1 0.30103    0 0.1249387 0      
+  text2 0          0 0.1249387 0.60206
+  text3 0          0 0.2498775 0      
+  text4 0.30103    0 0         0      </code></pre>
 </div>
 </div>
-</div>
-</div>
-</section>
-
-<section id="topic-models-1" class="title-slide slide level1 center">
-<h1>Topic models</h1>
-<p>Documents are written with the following model:</p>
-<p>For each document i</p>
-<ul>
-<li><p>Draw a document-topic distribution <span class="math inline">\(\theta_d\)</span></p>
-<ul>
-<li><p>For each word j in document i</p>
-<ul>
-<li><p>Sample a single topic from the document-topic distribution <span class="math inline">\(\theta_d\)</span></p></li>
-<li><p>Sample a word from the selected topic distribution <span class="math inline">\(\phi_t\)</span></p></li>
-</ul></li>
-</ul></li>
-</ul>
-<div class="fragment">
-<p>The model is obviously unrealistic! But we can use this simplifying assumption to infer <span class="math inline">\(\theta\)</span> and <span class="math inline">\(\phi\)</span> and we get surprisingly useful results.</p>
-</div>
-</section>
-
-<section id="inference" class="title-slide slide level1 center">
-<h1>Inference</h1>
-<ul>
-<li><p>Gibbs sampling</p></li>
-<li></li>
-</ul>
 <div class="quarto-auto-generated-content">
 <div class="footer footer-default">
 
@@ -1728,6 +1664,7 @@ margin-right: 0; }
 <p> </p>
 </div>
 </div>
+</section>
 </section>
     </div>
   </div>
