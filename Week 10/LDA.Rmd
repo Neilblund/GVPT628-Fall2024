@@ -1,0 +1,277 @@
+---
+title: "LDA"
+output: 
+  html_document:
+      df_print: paged
+      code_download: true
+      toc: true
+      toc_depth: 3
+      toc_float: true
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
+
+```
+
+Packages and data
+
+```{r}
+library(tidyverse)  
+library(quanteda) # text 
+library(seededlda)  # package for both seeded LDA and regular LDA
+library(LDAvis) # for visualization 
+
+
+
+url<-'https://raw.githubusercontent.com/Neilblund/GVPT628-Fall2024/refs/heads/main/Week%2010/presidential_statements.csv'
+presidential_statements<-read_csv(url)
+
+```
+
+
+# Text cleaning
+
+First, we'll need to prepare the data. Start by creating a corpus, then assigning `docnames` and `docvars`
+
+```{r}
+
+text_corpus<-corpus(presidential_statements$text)
+docnames(text_corpus) <- presidential_statements$title
+docvars(text_corpus) <- presidential_statements|>select(-text, -title)
+
+
+```
+
+Then we'll tokenize the results and remomve stopwords from the data 
+
+```{r}
+pres_tokens <- tokens(text_corpus,
+                      what='word',
+                      remove_punct =TRUE,
+                      remove_symbols = TRUE,
+                      remove_numbers = TRUE,
+                      remove_url = TRUE,
+                      remove_separators = TRUE,
+                      include_docvars = TRUE
+                      )
+
+pres_tokens<- tokens_select(pres_tokens, 
+                            pattern = stopwords("en"), 
+                            selection = "remove")
+
+
+```
+
+
+We might also decide to do some additional cleanup in this step. For instance, I might want to recombine different versions of a president's name so that they're all counted as a single variable. A simple way to do this is to build a named list and then use the quanteda `dictionary` function to turn it into a dictionary, then use `tokens_lookup` to apply the dictionary to my list of tokens. 
+
+Make sure you've set "exclusive=FALSE", otherwise the `tokens_lookup` function removes all terms that aren't in your dictionary! 
+
+```{r}
+names<-dictionary(list(
+  "Joe_Biden" = c('Joseph R Biden Jr', "Joe Biden", "President Joe Biden"),
+  "Donald_Trump" = c("Donald Trump", "Donald J Trump", "Donald J Trump")
+  
+  ))
+
+pres_tokens<-tokens_lookup(pres_tokens, names, exclusive=FALSE)
+
+```
+
+
+Remember you can use the `kwic` function to explore your data a bit
+
+```{r}
+
+kwic(pres_tokens, "JOE_BIDEN", widow=3)
+
+```
+
+Finally, you'll want to convert the object to a `dfm`. 
+
+```{r}
+pres_dfm<- dfm(pres_tokens)
+
+summary(pres_dfm)
+
+```
+
+```{r}
+topfeatures(pres_dfm)
+
+```
+
+
+We might want to do some additional trimming here. Although for LDA its generally recommended that we avoid word-stemming or re-weighting, we can improve the speed of the model by trimming common terms:
+
+```{r}
+pres_dfm<-dfm_trim(pres_dfm, min_docfreq= 10)
+
+# Not run! pres_dfm <-dfm_wordstem(pres_dfm)
+# Not run! pres_dfm<- dfm_trim(pres_dfm, max_docfreq = 0.1, docfreq_type = "prop")
+
+```
+
+
+## Making training data
+
+We're going to try to assess the quality of our LDA results, but we want to avoid overfitting this model to known data. We're going to create a "training" set, which we'll use when running our model, and then a "test" set, which we'll use to judge the quality after we run it. 
+
+The code below is going to take about 25% of the documents and set them aside. The remaining documents will go into `train_dfm`
+
+
+```{r}
+set.seed(999)
+indices<-seq(nrow(pres_dfm))
+test<-sample(indices, size = round(nrow(pres_dfm)*.25))
+train<-indices[which(indices%in%test==FALSE)]
+
+dfmat_training <- dfm_subset(pres_dfm, indices %in% train)
+
+# get test set (documents not in id_train)
+dfmat_test <- dfm_subset(pres_dfm, indices %in% test)
+
+```
+
+
+
+# Training the model
+
+
+## Question 1
+
+Adjust the values of K. Leave beta and alpha as-is
+
+```{r}
+# number of topics: 
+K<-10
+# raising this result in more uniform theta
+alpha <- 1/K
+#raising this will result in a more uniform phi
+beta <- 0.01
+```
+
+
+
+Now run this entire chunk. Maybe grab a snack.
+
+```{r, eval=FALSE}
+
+# the initialization is random, so set the random number seed for replicability 
+set.seed(100)
+
+# running the model
+lda_model<-textmodel_lda(dfmat_training, 
+                         k = K, 
+                         max_iter=2000, 
+                         auto_iter = T,
+                         alpha = alpha,
+                         beta = beta)
+
+# saving the output. 
+filename<-sprintf('lda_%s_topics,rds', K)
+saveRDS(lda_model, filename)
+
+# calculating our perplexity score on dfmat_test
+perplexity(lda_model, newdata=dfmat_test)
+
+
+
+```
+
+
+
+```{r}
+
+lda_model<-readRDS(sprintf('lda_%s_topics,rds', K))
+
+```
+
+
+## Assessing topic quality
+
+One way to assess the quality of our topics is to see how well someone can detect an "intruder" that doesn't fit with other high-probability terms. Run the code below for a bit and see how well you do (press escape to quit)
+
+
+```{r}
+# extra functions just for this page
+source('https://raw.githubusercontent.com/Neilblund/GVPT628-Fall2024/refs/heads/main/Week%2010/lda_functions.R')
+
+```
+
+```{r, eval=FALSE}
+# code from: https://github.com/ccs-amsterdam/r-course-material/blob/master/tutorials/R_text_LDA_perplexity.Rmd
+
+topic_coherence(lda_model)
+
+```
+
+
+## Question 2
+
+How would I extract the top 10 terms from each topic? How do I interpret the output here? 
+
+```{r}
+
+
+```
+
+
+
+## Question 3
+
+How about links to the top 5 documents for each topic?
+ 
+```{r}
+
+
+```
+
+
+
+## Visualizing the result
+
+You can use the LDAVis package to visualize the results of a topic model. I've included a custom function here that will allow you to include a working interactive in a markdown document, or just browse it with `browseURL`:
+
+```{r}
+source('https://raw.githubusercontent.com/Neilblund/APAN/refs/heads/main/ldavis_shareable.R')
+LDAvis_standalone(lda_model, outputfile='lda_topics.html')
+htmltools::includeHTML('lda_topics.html')
+# or browseURL('lda_topics.html')
+```
+
+## Making a table
+
+I've also added some custom code to generate a table for your plots (but maybe don't count on this working for everything, I haven't tested it much). You can view the top terms and documents along with links to each by running the code below:
+
+```{r}
+# requires install.packages("kableExtra")
+
+article_links<-linker(docnames(lda_model$data),
+                      docvars(lda_model$data, "fullpath"))
+
+docs<-lda_top_docs(lda_model$theta, 
+              docnames = article_links, num_docs =3)
+
+terms<-lda_top_words(lda_model$phi)
+
+makeKable(terms, docs, topics_rename=T, fontsize=10)
+
+```
+
+
+
+
+# KeyATM (time permitting)
+
+
+
+```{r}
+
+
+
+```
+
+
