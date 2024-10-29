@@ -494,8 +494,8 @@ overflow-y: scroll;
 <span id="cb1-4"><a href=""></a><span class="co"># a single draw from the dirichlet:</span></span>
 <span id="cb1-5"><a href=""></a><span class="fu">rdirichlet</span>(<span class="dv">1</span>, <span class="fu">rep</span>(dispersion, outcomes))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>           [,1]       [,2]      [,3]       [,4]      [,5]
-[1,] 0.02051982 0.08612107 0.3662696 0.06262461 0.4644649</code></pre>
+<pre><code>          [,1]       [,2]      [,3]      [,4]         [,5]
+[1,] 0.3015876 0.01440414 0.5355434 0.1483258 0.0001390675</code></pre>
 </div>
 </div>
 </div>
@@ -573,7 +573,7 @@ overflow-y: scroll;
 
 <section id="the-lda-generative-model" class="title-slide slide level2 center">
 <h2>The LDA Generative Model</h2>
-<div class="pseudocode-container quarto-float" data-indent-size="1.2em" data-line-number="true" data-comment-delimiter="//" data-pseudocode-number="1" data-line-number-punc=":" data-caption-prefix="Algorithm" data-no-end="false">
+<div class="pseudocode-container quarto-float" data-line-number="true" data-caption-prefix="Algorithm" data-line-number-punc=":" data-pseudocode-number="1" data-comment-delimiter="//" data-no-end="false" data-indent-size="1.2em">
 <div class="pseudocode">
 \begin{algorithm} \caption{LDA Generative Model} \begin{algorithmic} \Procedure{LDA}{} \State 1. Choose $\theta \sim \text{Dir}(\alpha)$ (document-topic probabilities) \State 2. Choose $\phi \sim \text{Dir}(\beta)$ (topic-word probabilities) \For{each document $d$} \For{each word $w_{d,i}$} \State Sample a topic $ k \sim \text{Categorical}(\theta_{d})$ \State Sample a word $ w_{d,i} \sim \text{Categorical}(\phi_{k})$ \EndFor \EndFor \EndProcedure \end{algorithmic} \end{algorithm}
 </div>
@@ -871,7 +871,7 @@ overflow-y: scroll;
 <p>Keyword Assisted Topic Models (<a href="https://keyatm.github.io/keyATM/">Rpackage</a>, <a href="https://onlinelibrary-wiley-com.proxy-um.researchport.umd.edu/doi/10.1111/ajps.12779">paper</a>) allow some of the benefits of dictionary based models to inform the topic model.</p>
 <div class="columns">
 <div class="column" style="width:50%;">
-<div class="pseudocode-container quarto-float" data-indent-size="1.2em" data-line-number="true" data-comment-delimiter="//" data-pseudocode-number="1" data-line-number-punc=":" data-caption-prefix="Algorithm" data-no-end="false">
+<div class="pseudocode-container quarto-float" data-line-number="true" data-caption-prefix="Algorithm" data-line-number-punc=":" data-pseudocode-number="1" data-comment-delimiter="//" data-no-end="false" data-indent-size="1.2em">
 <div class="pseudocode">
 \begin{algorithm} \begin{algorithmic} \Procedure{Key-ATM}{} \State Choose $\theta \sim \text{Dir}(\alpha)$ (document-topic probabilities) \State Choose $\phi \sim \text{Dir}(\beta)$ (topic-word probabilities) \State Choose $\tilde{\phi} \sim \text{Dir}(\beta)$ (topic-word probabilities for keyword topics) \State Choose $\pi \sim \text{Beta}(\gamma_1, \gamma_2$) (keyword prob. for each keyword topic) \For{each document $d$} \For{each word $w_{d,i}$} \State Sample a topic $k \sim \text{Categorical}(\theta_i)$ \If{$k$ is a non-keyword topic} \State Sample a word $w_{d,i} \sim \text{Categorical}(\phi_{k})$ \Else \State $s_{d,i} \sim \text{Bernoulli}(\pi_k)$ \If{$s_{d,i}=1$} \State Sample a word $w_{d,i} \sim \text{Categorical}(\tilde{\phi_k})$ \Else \State Sample a word $w_{d,i} \sim \text{Categorical}(\phi_k)$ \EndIf \EndIf \EndFor \EndFor \EndProcedure \end{algorithmic} \end{algorithm}
 </div>
