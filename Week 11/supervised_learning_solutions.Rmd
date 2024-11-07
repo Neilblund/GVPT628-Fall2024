@@ -1,0 +1,263 @@
+---
+title: "Supervised Learning"
+output: 
+  html_document:
+      df_print: paged
+      code_download: true
+      toc: true
+      toc_depth: 3
+      toc_float: true
+---
+
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE)
+```
+
+
+
+This is a data set with 2,000 sentences I pulled from the [Comparative Manifestos Project API](https://manifesto-project.wzb.eu/). These have been hand coded as either immigration related (or not). The code I used is [here](https://raw.githubusercontent.com/Neilblund/GVPT628-Fall2024/refs/heads/main/Week%2011/manifesto_api.R) (you'll need a Manifesto Project API key to use it)
+
+```{r}
+library(tidyverse)
+library(quanteda)
+library(quanteda.textmodels)
+library(caret)
+
+immigr_sentences<-read_csv('https://raw.githubusercontent.com/Neilblund/APAN/refs/heads/main/immigration_sentences.csv')
+
+
+```
+
+# Text cleaning
+
+We'll start by cleaning the corpus and converting it to a DFM:
+
+```{r}
+
+immigr_corpus<-corpus(immigr_sentences$text, docvars=immigr_sentences|>select(-text))
+immigr_tokens<-tokens(immigr_corpus,
+                      what = 'word',
+                      remove_punct =TRUE,
+                      remove_symbols = TRUE,
+                      remove_numbers = TRUE,
+                      remove_url = TRUE,
+                      remove_separators = TRUE,
+                      include_docvars = TRUE
+)|>
+  tokens_wordstem()
+
+immigr_dfm<-dfm(immigr_tokens)
+
+
+```
+
+And now we need to create a training and test set.
+
+```{r}
+
+ids<-seq(nrow(immigr_dfm))
+set.seed(100)
+train_ids<-sample(ids, size=round(length(ids) * .75))
+
+
+dfmat_training <- dfm_subset(immigr_dfm, ids %in% train_ids)
+
+# get test set 
+dfmat_test <- dfm_subset(immigr_dfm, !ids %in% train_ids)
+
+# get matching features
+dfmat_matched<-dfm_match(dfmat_test, features = featnames(dfmat_training))
+
+
+tmod_nb <- textmodel_nb(dfmat_training, 
+                        docvars(dfmat_training, 'immigration_related'),
+                        prior ='docfreq'
+                        )
+
+```
+
+## Question 1
+
+Get predictions for `dfmat_test` and create/assess the confusion matrix. How good is our classifier?
+
+```{r}
+# get the predictions for the test data
+pred<-predict(tmod_nb, newdata=dfmat_matched)
+
+# get the actual value of immigration related from the test data
+actual<- docvars(dfmat_matched, "immigration_related")
+
+
+# make a table with the predicted values in rows and the actual values in columns
+
+tab<-table(pred, actual)
+
+confusionMatrix(tab)
+
+```
+
+We might want to compare this model to a model that uses a weighting scheme like TF-IDF to place more emphasis on more uncommon terms. We can create a weighted dfm using the `dfm_tfidf` function.
+
+```{r}
+
+weighted_immigr_dfm<-immigr_dfm|>
+  dfm_tfidf()
+
+wtd_dfmat_training <- dfm_subset(weighted_immigr_dfm, ids %in% train_ids)
+# get test set 
+wtd_dfmat_test <- dfm_subset(weighted_immigr_dfm, !ids %in% train_ids)
+
+# get matching features
+wtd_dfmat_matched<-dfm_match(wtd_dfmat_test, features = featnames(wtd_dfmat_training))
+
+
+wtd_tmod_nb <- textmodel_nb(wtd_dfmat_training, 
+                        docvars(dfmat_training, 'immigration_related'),
+                        prior ='docfreq'
+                        )
+
+wtd_tmod_lr <- textmodel_lr(wtd_dfmat_training, 
+                        docvars(wtd_dfmat_training, 'immigration_related')
+                        )
+
+```
+
+## Question 2
+
+Compare `wtd_tmod_nb`, `wtd_tmod_lr` and `tmod_nb`. Does one perform significantly better than the others?
+
+```{r}
+actual<-docvars(dfmat_matched, "immigration_related")
+
+
+nb_tab<- predict(tmod_nb, newdata=dfmat_matched) # prediction from naive bayes
+
+wtd_nb_tab <- predict(wtd_tmod_nb, wtd_dfmat_matched) # prediction from naive bayes with tf_idf
+  
+wtd_lr_tab <- predict(wtd_tmod_lr, wtd_dfmat_matched) # prediction from weighted elastic net regression
+  
+
+# make a confusion matrix for each model
+c1<-confusionMatrix(table(nb_tab, actual))
+c2<-confusionMatrix(table(wtd_nb_tab, actual))
+c3<-confusionMatrix(table(wtd_lr_tab, actual))
+
+
+# compare the overall metrics across each one: 
+data.frame(
+  'Naive Bayes' =c1$overall,
+  'Tf-IDF Naive Bayes' =c2$overall,
+  'Elastic Net' =c3$overall)
+  
+```
+
+# K-fold cross validation
+
+Using a hold-out set can help reduce the risk of overfitting, but its still possible to overfit to our held-out set. Rather than using a single test set, we might be better off dividing the data into "K" equally sized groups, running the model K times, and then averaging our metrics across all of them.
+
+The `caret` package provides a great set of tools for k-fold cross validation, but we're going to try to set this up manually for this problem.
+
+I've written a small function that takes a set of 
+
+
+```{r}
+
+generateFolds<-function(ids, k=10, seed=NULL){
+  if(!is.null(seed)){
+    set.seed(seed)
+  }
+  # shuffle ids
+  folds<-setNames(split(ids, cut(sample(length(ids)), k)), 1:k)
+  # train ids instead of test ids
+  fold_ids<-lapply(folds, function(x) ids[!ids%in%x])
+  return(fold_ids)
+}
+
+ids<- seq(nrow(immigr_dfm))
+
+folds<-generateFolds(ids=ids, k=10, seed=999)
+
+
+
+
+
+```
+
+
+
+
+## Question 3
+
+Write a loop to iterate over each fold, train a model on the training set, predict the hold-out set, and then store the results of the `overall` metrics from using the confusionMatrix function on the result.
+
+
+
+
+
+```{r}
+
+# make the IDs
+ids<- seq(nrow(immigr_dfm))
+
+
+# generate 40 folds
+folds<-generateFolds(ids=ids, k=40, seed=999)
+
+# make an empty data frame
+metrics_df<-data.frame()
+
+
+for(i in 1:length(folds)){
+  # get the train ids from fold i
+  train_ids<-folds[[i]]
+  
+  dfmat_training <- dfm_subset(immigr_dfm, ids %in% train_ids)
+
+  # get test set 
+  dfmat_test <- dfm_subset(immigr_dfm, !ids %in% train_ids)
+
+  # get matching features
+  dfmat_matched<-dfm_match(dfmat_test, features = featnames(dfmat_training))
+
+
+  tmod_nb <- textmodel_nb(dfmat_training, 
+                        docvars(dfmat_training, 'immigration_related'),
+                        prior ='docfreq'
+                        )
+  
+  pred<-predict(tmod_nb, newdata=dfmat_matched)
+
+  # get the actual value of immigration related from the test data
+  actual<- docvars(dfmat_matched, "immigration_related")
+  
+
+  # make a table with the predicted values in rows and the actual values in columns
+
+  tab<-table(pred, actual)
+  
+  # run the confusionMatrix and just get the overall scores from the output
+  result<-confusionMatrix(tab)$overall
+  # add the result to the data frame
+  metrics_df<-bind_rows(metrics_df, result)
+
+  
+}
+
+
+
+colMeans(metrics_df)
+
+
+```
+
+```{r}
+
+ggplot(metrics_df, aes(x=Kappa)) + geom_density(fill='blue', alpha=.5) + 
+  theme_bw()
+
+
+
+```
