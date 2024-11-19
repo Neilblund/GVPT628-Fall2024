@@ -1,0 +1,435 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+
+
+# Data and Functions
+
+
+
+
+```{r, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(quanteda)
+library(quanteda.textmodels)
+library(caret)
+
+
+immigr_sentences<-read_csv('https://raw.githubusercontent.com/Neilblund/APAN/refs/heads/main/immigration_sentences.csv')|>
+  mutate(rowid = paste0('sentence_', seq(n())))
+
+immigr_corpus<-corpus(immigr_sentences$text, docnames=immigr_sentences$rowid, docvars=immigr_sentences|>select(-text))
+immigr_tokens<-tokens(immigr_corpus,
+                      what = 'word',
+                      remove_punct =TRUE,
+                      remove_symbols = TRUE,
+                      remove_numbers = TRUE,
+                      remove_url = TRUE,
+                      remove_separators = TRUE,
+                      include_docvars = TRUE)
+
+
+```
+
+## Functions
+
+We'll use these functions for model comparison
+
+
+```{r}
+
+
+tt_split<-function(x, yvars, train_ids){
+  # splits train and test data and ensures matching features
+  
+  ids<-seq(nrow(x))
+  train_x<-x[ids%in%train_ids, ]
+  trainfeatures<-which(colSums(train_x)>0)
+
+  train_x<-train_x[,trainfeatures]
+  yvars_training <- yvars[which(ids %in% train_ids)]
+  
+  test_x<-x[!ids%in%train_ids, trainfeatures]
+  
+  
+  yvars_testing <- yvars[!ids %in% train_ids]
+  return(list('train_x' =  train_x, 
+              'test_x' = test_x,
+              'train_y' = yvars_training, 
+              'test_y' = yvars_testing))
+}
+
+
+tt_predict<-function(model, tt_data){
+  require(caret)
+  # takes train and test data  with model and return a confusion matrix
+  # get the predictions for the test data
+  pred<-predict(model, newdata=tt_data$test_x)
+  # make a table with the predicted values in rows and the actual values in columns
+  tab<-table(pred, tt_data$test_y)
+  return(confusionMatrix(tab))
+}
+
+generateFolds<-function(ids, k=10, seed=NULL){
+  if(!is.null(seed)){
+    set.seed(seed)
+  }
+  
+  
+  # shuffle ids
+  folds<-setNames(split(ids, cut(sample(length(ids)), k)), 1:k)
+  # train ids instead of test ids
+  fold_ids<-lapply(folds, function(x) ids[!ids%in%x])
+  return(fold_ids)
+}
+
+
+kfold<-function(x, y,folds, model, ...){
+  # running k-fold cross validation to a model
+  metrics<-data.frame()
+  for(i in folds){
+      prepped_data<-tt_split(x=x, yvars=y, train_ids = i)
+      trained_model <- model(x=prepped_data$train_x, y=prepped_data$train_y, ...)
+      result<-tt_predict(trained_model, prepped_data)
+      metrics<-bind_rows(metrics, result$overall)
+      
+  }
+
+
+ return(metrics)
+
+}
+
+
+
+
+```
+
+
+# Model Comparisons 
+
+We'll compare each model on 40 folds of data.
+
+```{r}
+
+folds<-generateFolds(seq(nrow(immigr_sentences)), k=40, seed=999)
+
+
+```
+
+## Baseline model
+
+We'll use the Naive Bayes classifier for our baseline model. We've stemmed terms and removed stopwords, but otherwise this is is a standard naive bayes model.
+
+```{r}
+
+nb_baseline <- kfold(
+  x = immigr_tokens |>
+    dfm() |>
+    dfm_select(pattern = stopwords("en"), selection = "remove")|>
+    dfm_wordstem(),
+  y = docvars(immigr_tokens, 'immigration_related'),
+  folds = folds,
+  model = textmodel_nb,
+  prior = 'uniform'
+)
+
+
+quantile(nb_baseline$Accuracy, c(0.025, .5, .975))
+
+quantile(nb_baseline$Kappa, c(0.025, .5, .975))
+
+```
+
+
+
+## Using N-Grams
+
+N-grams are spans of `n` terms in a row. i.e. "asylum" and "seekers" are combined to form the phrase "asylum_seekers". `tokens_ngrams(n=c(1, 2))` means "include all single words as well as all two-word sequences in this corpus. Including n-grams will dramatically increase the number of parameters, and many of them will be redundant or duplicates. For the purposes of speed, we'll 
+
+```{r}
+nb_ngram <- kfold(
+  x = immigr_tokens |>
+    tokens_ngrams(n=c(1, 2))|>
+    dfm() |>
+    dfm_wordstem() |>
+    dfm_trim(min_docfreq = 2, docfreq_type = 'count')|>
+    dfm_select(pattern = stopwords("en"), selection = "remove"),
+  y = docvars(immigr_tokens, 'immigration_related'),
+  folds = folds,
+  model = textmodel_nb,
+  prior = 'uniform'
+)
+
+
+quantile(nb_ngram$Accuracy, c(0.025, .5, .975))
+
+quantile(nb_ngram$Kappa, c(0.025, .5, .975))
+
+  
+
+
+
+```
+
+
+## Lemmatization
+
+Lemmatization uses a more complicated ruleset to remove inflections from terms. 
+
+```{r, eval=FALSE}
+library(udpipe)
+x <- udpipe_download_model(language = "english", model_dir=tempdir())
+
+```
+
+```{r, eval=FALSE}
+ud_english<-udpipe_load_model(x$file_model)
+
+# adding names to texts they can be matched with original data
+texts<-immigr_sentences$text
+names(texts)<-immigr_sentences$rowid
+
+# parsing (this returns a bunch of additional tags, but we're just using the lemma)
+parsed_texts<-udpipe(texts, ud_english)
+# collapsing lemma back into sentences 
+lemmatized_sentences<-parsed_texts|>
+  group_by(doc_id)|>
+  summarise(lemma = paste0(lemma, collapse=" "))
+
+# save the output
+write_csv(lemmatized_sentences, file='lemmatized_sentences.csv')
+
+```
+
+Now we can join these results with our original data and use the document lemma instead of the tokens.
+
+```{r}
+
+lemmatized_sentences<-read_csv('lemmatized_sentences.csv')
+
+# join with original data, then process as a new corpus: 
+lemma_corpus<-left_join(immigr_sentences, lemmatized_sentences, by=join_by(rowid == doc_id))|>
+  corpus(docid_field = 'rowid',
+         text_field = 'lemma'
+         )
+
+lemma_tokens<-tokens(lemma_corpus,
+                      what = 'word',
+                      remove_punct =TRUE,
+                      remove_symbols = TRUE,
+                      remove_numbers = TRUE,
+                      remove_url = TRUE,
+                      remove_separators = TRUE,
+                      include_docvars = TRUE)
+
+
+```
+
+
+```{r}
+
+nb_lemma <- kfold(
+  x = lemma_tokens |>
+    tokens_ngrams(n=c(1, 2))|>
+    dfm() |>
+    dfm_trim(min_docfreq = 2, docfreq_type = 'count')|>
+    dfm_select(pattern = stopwords("en"), selection = "remove"),
+  y = docvars(immigr_tokens, 'immigration_related'),
+  folds = folds,
+  model = textmodel_nb,
+  prior = 'uniform'
+)
+
+
+quantile(nb_lemma$Accuracy, c(0.025, .5, .975))
+quantile(nb_lemma$Kappa, c(0.025, .5, .975))
+
+
+
+```
+## Bernoulli Naive Bayes
+
+
+
+```{r}
+
+nb_bernoulli <- kfold(
+  x = lemma_tokens|>
+    tokens_ngrams(n=c(1, 2))|>
+    dfm() |>
+    dfm_trim(min_docfreq = 2, docfreq_type = 'count')|>
+    dfm_select(pattern = stopwords("en"), selection = "remove")|>
+    dfm_weight(scheme='boolean'),
+  y = docvars(immigr_tokens, 'immigration_related'),
+  folds = folds,
+  model = textmodel_nb,
+  prior = 'uniform',
+  distribution ='Bernoulli'
+)
+
+
+quantile(nb_bernoulli$Accuracy, c(0.025, .5, .975))
+quantile(nb_bernoulli$Kappa, c(0.025, .5, .975))
+
+
+```
+
+## Elastic Net
+
+
+
+```{r, eval=FALSE}
+lr_model <- kfold(
+  x = lemma_tokens|>
+    tokens_ngrams(n=c(1,2))|>
+    dfm() |>
+    dfm_trim(min_docfreq = 2, docfreq_type = 'count')|>
+    dfm_select(pattern = stopwords("en"), selection = "remove"),
+  y = docvars(immigr_tokens, 'immigration_related'),
+  folds = folds,
+  model = textmodel_lr
+)
+
+
+quantile(lr_model$Accuracy, c(0.025, .5, .975))
+
+quantile(lr_model$Kappa, c(0.025, .5, .975))
+
+
+```
+
+
+## Support Vector Machines
+
+Support Vector Machines use a hyperplane (a plane with n-1 dimensions) that best separates the classess in a n-dimensional space. They're substantially slower than a naive bayes model, but they can perform better on more complicated classification tasks because they implicitly handle some non-linearities and interactions between inputs. 
+
+```{r, eval=FALSE}
+
+svm_model <- kfold(
+  x = lemma_tokens|>
+    tokens_ngrams(n=c(1,2))|>
+    dfm() |>
+    dfm_trim(min_docfreq = 2, docfreq_type = 'count')|>
+    dfm_select(pattern = stopwords("en"), selection = "remove"),
+  y = docvars(immigr_tokens, 'immigration_related'),
+  folds = folds,
+  model = textmodel_svm
+)
+
+
+quantile(svm_tfidf$Accuracy, c(0.025, .5, .975))
+
+quantile(svm_tfidf$Kappa, c(0.025, .5, .975))
+
+
+```
+
+## Using a dictionary
+
+An alternative approach here might be to use an existing dictionary to combine some similar terms in our model.
+
+```{r}
+policyAgendas<-readRDS(url('https://github.com/Neilblund/APAN/raw/main/policy_agendas_dictionary.rds'))
+
+# convert to a quanteda dictionary format
+policyagendas.dict <- dictionary(policyAgendas)
+
+# apply the dictionary
+agenda_tokens <- tokens_lookup(lemma_tokens, dictionary = policyagendas.dict, levels = 1, exclusive=FALSE)
+
+
+nb_dict <- kfold(
+  x = agenda_tokens|>
+    tokens_ngrams(n=c(1,2))|>
+    dfm() |>
+    dfm_select(pattern = stopwords("en"), selection = "remove")|>
+    dfm_weight(schem='boolean'),
+  y = docvars(immigr_tokens, 'immigration_related'),
+  folds = folds,
+  model = textmodel_nb,
+  prior = 'uniform',
+  distribution ='Bernoulli'
+  
+)
+
+
+quantile(nb_dict$Accuracy, c(0.025, .5, .975))
+quantile(nb_dict$Kappa, c(0.025, .5, .975))
+
+
+```
+
+
+
+## Adding Data
+
+When all else fails: more data can almost always boost the quality of a classifier.
+
+
+```{r}
+set.seed(100)
+
+immigr_sentences <- read_csv("C:/Users/neilb/Documents/APAN/GVPT628-Fall2024/manifestos_expanded.csv")|>
+  mutate(immigration_related = cmp_code %in% c("602.1", "602.2","607.2", "608.2"))|>
+  mutate(rowid = paste0('sentence_', seq(n())))|>
+  filter(!is.na(cmp_code))|>
+  filter(cmp_code!="H")|>
+  group_by(immigration_related)|>
+  slice_sample(n=5000)|>
+  ungroup()
+
+immigr_corpus<-corpus(immigr_sentences$text, docnames=immigr_sentences$rowid, docvars=immigr_sentences|>select(-text))
+immigr_tokens<-tokens(immigr_corpus,
+                      what = 'word',
+                      remove_punct =TRUE,
+                      remove_symbols = TRUE,
+                      remove_numbers = TRUE,
+                      remove_url = TRUE,
+                      remove_separators = TRUE,
+                      include_docvars = TRUE)
+
+folds<-generateFolds(seq(nrow(immigr_sentences)), k=40, seed=999)
+
+
+nb_ngram_moredata <- kfold(
+  x = immigr_tokens |>
+    tokens_ngrams(n=c(1, 2))|>
+    dfm() |>
+    dfm_wordstem() |>
+    dfm_trim(min_docfreq = 2, docfreq_type = 'count')|>
+    dfm_select(pattern = stopwords("en"), selection = "remove"),
+  y = docvars(immigr_tokens, 'immigration_related'),
+  folds = folds,
+  model = textmodel_nb,
+  prior = 'uniform'
+)
+
+quantile(nb_ngram_moredata$Accuracy, c(0.025, .5, .975))
+
+quantile(nb_ngram_moredata$Kappa, c(0.025, .5, .975))
+
+
+```
+
+
+(Note: more complicated classifiers generally only start to outperform Naive Bayes models when they have a lot of data and when the thing they're attempting to classify is relatively complex, but for a small data set, simple problem, and short sentences, its pretty hard to beat)
+
+
+```{python}
+
+from bert_embedding import BertEmbedding
+
+bert_abstract = """We introduce a new language representation model called BERT, which stands for Bidirectional Encoder Representations from Transformers.
+ Unlike recent language representation models, BERT is designed to pre-train deep bidirectional representations by jointly conditioning on both left and right context in all layers.
+ As a result, the pre-trained BERT representations can be fine-tuned with just one additional output layer to create state-of-the-art models for a wide range of tasks, such as question answering and language inference, without substantial task-specific architecture modifications. 
+BERT is conceptually simple and empirically powerful. 
+It obtains new state-of-the-art results on eleven natural language processing tasks, including pushing the GLUE benchmark to 80.4% (7.6% absolute improvement), MultiNLI accuracy to 86.7 (5.6% absolute improvement) and the SQuAD v1.1 question answering Test F1 to 93.2 (1.5% absolute improvement), outperforming human performance by 2.0%."""
+sentences = bert_abstract.split('\n')
+bert_embedding = BertEmbedding()
+result = bert_embedding(sentences)
+```
+

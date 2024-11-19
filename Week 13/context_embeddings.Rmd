@@ -1,0 +1,195 @@
+---
+title: "conText"
+output: 
+  html_document:
+      df_print: paged
+      code_download: true
+      toc: true
+      toc_depth: 3
+      toc_float: true
+---
+
+
+
+The conText package provides access to an embedding regression model from a recent paper by Rodriguez, Spriling, and Stewart. It uses word vectors and KWIC to track how words change their associations in different contexts. (This example comes mostly from their package vignette)
+
+
+
+```{r}
+
+poldf<-read_csv('https://github.com/Neilblund/APAN/raw/main/news_sample.csv')
+
+# normalizing some apostrophes and quotes (surprisingly important!)
+poldf$text<-str_replace_all(poldf$text,"\u201C|\u201D", '"')|>
+  str_replace_all("\u2019|\u2018", "'")
+
+
+# convert to a corpus
+pol_corpus<-with(poldf ,corpus(text, docvars = data.frame(url, headline,  date, source)))
+
+# tokenize the texts
+pol_tokens<-tokens(pol_corpus, 
+                   what = 'word',
+                   # this keeps characteristics about the documents like the headline and url
+                   remove_punct =TRUE,
+                   remove_symbols = TRUE,
+                   remove_numbers = TRUE,
+                   remove_url = TRUE,
+                   remove_separators = TRUE,
+                   include_docvars = TRUE
+)
+
+# get the features
+feats <- dfm(pol_tokens, tolower=T, verbose = FALSE) |>
+  dfm_trim(min_termfreq = 5) |>
+  featnames()
+
+toks_nostop_feats <- tokens_select(pol_tokens, feats, padding = TRUE)
+
+glove <- read.csv(unzip('/glove6b/glove.6B.zip', 'glove.6B.100d.txt'), row.names=1, sep=' ', quote="",
+                  header=FALSE
+)|>
+  as.matrix()
+
+```
+
+
+
+Start by getting the key terms in context. This is actually just a wrapper around the `kwic` function from quanteda that allows you maintain document variables. 
+
+```{r}
+
+# get immigration word usage in context
+immig_toks <- tokens_context(x = toks_nostop_feats, pattern = "immigr*", window = 6L)
+
+
+```
+
+```{r}
+
+
+
+head(docvars(immig_toks), 3)
+
+```
+
+
+
+```{r}
+# build document-feature matrix
+immig_dfm <- dfm(immig_toks)
+immig_dfm[1:3,1:3]
+
+```
+
+This function applies a subset of the pre-trained GloVe embeddings to the terms in context: 
+
+```{r}
+toks_fcm <- fcm(toks_nostop_feats, context = "window", window = 6, count = "frequency", tri = FALSE) # important to set tri = FALSE
+local_transform <- compute_transform(x = toks_fcm, pre_trained = glove, weighting = 'log')
+
+# build a document-embedding-matrix
+immig_dem <- dem(x = immig_dfm, pre_trained = 
+                  glove, transform = TRUE, 
+                 transform_matrix = local_transform, verbose = TRUE)
+
+# each document inherits its corresponding docvars
+
+
+```
+
+We get thea average embedding for the entire corpus by simply averaging over all of the columns: 
+
+
+```{r}
+
+# to get a single "corpus-wide" embedding, take the column average
+immig_wv <- matrix(colMeans(immig_dem), ncol = ncol(immig_dem)) |>
+  `rownames<-`("immigration")
+dim(immig_wv)
+
+```
+
+The `dem_group` function allows us to create a set of group-specific embeddings: 
+
+```{r}
+
+# to get group-specific embeddings, average by source
+immig_wv_source <- dem_group(immig_dem, groups = immig_dem@docvars$source)
+dim(immig_wv_source)
+
+```
+
+`nns` will allow us to find the nearest words to our target term in each group: 
+
+
+```{r}
+# find nearest neighbors by party
+# setting as_list = FALSE combines each group's results into a single tibble (useful for joint plotting)
+immig_nns <- nns(immig_wv_source, pre_trained = glove, N = 5, 
+                 candidates = immig_wv_source@features, as_list = TRUE)
+
+immig_nns[["Fox News"]]
+
+```
+
+How close are these terms to the Fox News vs CNN contexts? 
+
+
+```{r}
+cos_sim(immig_wv_source, pre_trained = glove, features = c('reform', 'criminal'), as_list = FALSE)
+```
+
+
+`nns_ratio` gets the ratio of cosine similarities between the grouped vectors, so the terms with values >1 are more strongly associated with the numerator category, and values <1 are more associated with the denominator: 
+
+
+```{r}
+
+nns_ratio(x = immig_wv_source, N = 10, numerator = "Fox News", candidates = immig_wv_source@features, pre_trained = glove, verbose = FALSE)
+
+```
+
+
+The `ncs` function identifies the contexts that are closest to the selected term for each group. 
+
+```{r}
+immig_ncs <- ncs(x = immig_wv_source, contexts_dem = immig_dem, contexts = immig_toks, N = 5, as_list = TRUE)
+
+immig_ncs[["Fox News"]]
+
+```
+
+Embedding regression. This actually doesn't do much as-is, but it would be useful if we had more covariates (like if you wanted to control for time period or what section of a site it came from)
+
+```{r}
+
+
+
+set.seed(2021L)
+model1 <- conText(formula = c("immigrant", "border", "asylum") ~  source,
+                  data = toks_nostop_feats,
+                  pre_trained = glove,
+                  transform = TRUE, transform_matrix = local_transform,
+                  bootstrap = TRUE, num_bootstraps = 100,
+                  permute = TRUE, num_permutations = 100,
+                  window = 6, case_insensitive = TRUE,
+                  verbose = FALSE)
+
+
+```
+
+
+```{r}
+
+# D-dimensional beta coefficients
+# the intercept in this case is the ALC embedding for female Democrats
+# beta coefficients can be combined to get each group's ALC embedding
+CNN_wv <- model1['(Intercept)',] # CNN 
+FOX_wv <- model1['(Intercept)',] + model1['source_Fox News',] # Fox 
+
+
+# nearest neighbors
+nns(rbind(FOX_wv, CNN_wv), N = 10, pre_trained = glove, candidates = model1@features)
+
+```
