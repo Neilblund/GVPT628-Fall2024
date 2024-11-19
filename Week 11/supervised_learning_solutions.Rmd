@@ -255,7 +255,7 @@ colMeans(metrics_df)
 
 ```{r}
 
-ggplot(metrics_df, aes(x=Kappa)) + geom_density(fill='blue', alpha=.5) + 
+ggplot(metrics_df, aes(x=Kappa)) + geom_boxplot() +
   theme_bw()
 
 
