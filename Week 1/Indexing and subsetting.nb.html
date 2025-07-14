@@ -1762,20 +1762,15 @@ formatted factor variables to a format that works for R, and then we’ll
 simplify our analyses by taking only 2019 data.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShoYXZlbilcbmBgYCJ9 -->
-<pre class="r"><code>library(haven)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogcGFja2FnZSDigJhoYXZlbuKAmSB3YXMgYnVpbHQgdW5kZXIgUiB2ZXJzaW9uIDQuMy4yXG4ifQ== -->
-<pre><code>Warning: package ‘haven’ was built under R version 4.3.2</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY2hlczwtcmVhZF9kdGEoJ2h0dHBzOi8vd3d3LmNoZXNkYXRhLmV1L3MvMTk5OS0yMDE5X0NIRVNfZGF0YXNldF9tZWFuc3YzLXk0dGcuZHRhJylcblxuY2hlcyA8LSBhc19mYWN0b3IoY2hlcylcblxuY2hlczwtc3Vic2V0KGNoZXMsIHllYXIgPT0yMDE5KVxuXG5gYGAifQ== -->
-<pre class="r"><code>ches&lt;-read_dta(&#39;https://www.chesdata.eu/s/1999-2019_CHES_dataset_meansv3-y4tg.dta&#39;)
-
-ches &lt;- as_factor(ches)
-
-ches&lt;-subset(ches, year ==2019)
+<!-- rnb-output-begin eyJkYXRhIjoiXG48IS0tIHJuYi1zb3VyY2UtYmVnaW4gZXlKa1lYUmhJam9pWUdCZ2NseHViR2xpY21GeWVTaG9ZWFpsYmlsY2JseHVZR0JnSW4wPSAtLT5cblxuYGBgclxubGlicmFyeShoYXZlbilcblxuYGBgXG5cbjwhLS0gcm5iLXNvdXJjZS1lbmQgLS0+XG4ifQ== -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShoYXZlbilcblxuYGBgIn0= -->
+<pre class="r"><code>library(haven)
 </code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-output-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiXHUwMDFiRzI7XHUwMDFiSDI7V2FybmluZ1x1MDAxYmg6IHBhY2thZ2Ug4oCYaGF2ZW7igJkgd2FzIGJ1aWx0IHVuZGVyIFIgdmVyc2lvbiA0LjMuMlx1MDAxYmdcbiJ9 -->
+<pre><code>G2;H2;Warningh: package ‘haven’ was built under R version 4.3.2g</code></pre>
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>Take a minute to <code>View()</code> the data set and see how things
@@ -1789,6 +1784,7 @@ Here’s some code that gets some random numbers and manipulates them
 without using a pipe:</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG48IS0tIHJuYi1zb3VyY2UtYmVnaW4gZXlKa1lYUmhJam9pWUdCZ2NseHVjMlYwTG5ObFpXUW9NVEF3S1Z4dUl5Qm5aWFFnTVRBd0lITmhiWEJzWlhNZ1puSnZiU0JoSUc1dmNtMWhiQ0JrYVhOMGNtbGlkWFJwYjI0Z2QybDBhQ0J0WldGdUlIcGxjbThnWVc1a0lITmtJRDB4SUZ4dWVEd3RjbTV2Y20wb01UQXdLVnh1SXlCbGVIQnZibVZ1ZEdsaGRHVWdhWFJjYm5nOExXVjRjQ2g0S1Z4dUl5QnpiM0owSUdsMElGeHVlRHd0YzI5eWRDaDRLVnh1SXlCd2JHOTBJSFJvWlNCeVpYTjFiSFJjYm5Cc2IzUW9lQ2xjYm1CZ1lDSjkgLS0+XG5cbmBgYHJcbnNldC5zZWVkKDEwMClcbiMgZ2V0IDEwMCBzYW1wbGVzIGZyb20gYSBub3JtYWwgZGlzdHJpYnV0aW9uIHdpdGggbWVhbiB6ZXJvIGFuZCBzZCA9MSBcbng8LXJub3JtKDEwMClcbiMgZXhwb25lbnRpYXRlIGl0XG54PC1leHAoeClcbiMgc29ydCBpdCBcbng8LXNvcnQoeClcbiMgcGxvdCB0aGUgcmVzdWx0XG5wbG90KHgpXG5gYGBcblxuPCEtLSBybmItc291cmNlLWVuZCAtLT5cbiJ9 -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc2V0LnNlZWQoMTAwKVxuIyBnZXQgMTAwIHNhbXBsZXMgZnJvbSBhIG5vcm1hbCBkaXN0cmlidXRpb24gd2l0aCBtZWFuIHplcm8gYW5kIHNkID0xIFxueDwtcm5vcm0oMTAwKVxuIyBleHBvbmVudGlhdGUgaXRcbng8LWV4cCh4KVxuIyBzb3J0IGl0IFxueDwtc29ydCh4KVxuIyBwbG90IHRoZSByZXN1bHRcbnBsb3QoeClcbmBgYCJ9 -->
 <pre class="r"><code>set.seed(100)
 # get 100 samples from a normal distribution with mean zero and sd =1 
@@ -1800,11 +1796,13 @@ x&lt;-sort(x)
 # plot the result
 plot(x)</code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>Here’s how we would do the same set of commands using the pipe:</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG48IS0tIHJuYi1zb3VyY2UtYmVnaW4gZXlKa1lYUmhJam9pWUdCZ2NseHVjMlYwTG5ObFpXUW9NVEF3S1Z4dUl5Qm5aWFFnTVRBd0lITmhiWEJzWlhNZ1puSnZiU0JoSUc1dmNtMWhiQ0JrYVhOMGNtbGlkWFJwYjI0Z2QybDBhQ0J0WldGdUlIcGxjbThnWVc1a0lITmtJRDB4SUZ4dWNtNXZjbTBvTVRBd0tYdytYRzRnSUdWNGNDZ3BmRDVjYmlBZ2MyOXlkQ2dwZkQ1Y2JpQWdjR3h2ZENncFhHNGdJRnh1WUdCZ0luMD0gLS0+XG5cbmBgYHJcbnNldC5zZWVkKDEwMClcbiMgZ2V0IDEwMCBzYW1wbGVzIGZyb20gYSBub3JtYWwgZGlzdHJpYnV0aW9uIHdpdGggbWVhbiB6ZXJvIGFuZCBzZCA9MSBcbnJub3JtKDEwMCl8PlxuICBleHAoKXw+XG4gIHNvcnQoKXw+XG4gIHBsb3QoKVxuICBcbmBgYFxuXG48IS0tIHJuYi1zb3VyY2UtZW5kIC0tPlxuIn0= -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc2V0LnNlZWQoMTAwKVxuIyBnZXQgMTAwIHNhbXBsZXMgZnJvbSBhIG5vcm1hbCBkaXN0cmlidXRpb24gd2l0aCBtZWFuIHplcm8gYW5kIHNkID0xIFxucm5vcm0oMTAwKXw+XG4gIGV4cCgpfD5cbiAgc29ydCgpfD5cbiAgcGxvdCgpXG4gIFxuYGBgIn0= -->
 <pre class="r"><code>set.seed(100)
 # get 100 samples from a normal distribution with mean zero and sd =1 
@@ -1814,6 +1812,7 @@ rnorm(100)|&gt;
   plot()
   </code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>Note that the pipe command will default to using the left-hand-side
@@ -1824,6 +1823,7 @@ explicitly reference the left-hand-side variable using the
 <code>lm()</code> command:</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG48IS0tIHJuYi1zb3VyY2UtYmVnaW4gZXlKa1lYUmhJam9pWUdCZ2NseHVJeUJVYUdseklHZHBkbVZ6SUdGdUlHVnljbTl5T2x4dVkyRnljM3crWEc0Z0lHeHRLSE53WldWa0lINGdaR2x6ZENsY2JseHVYRzRqSUhSb2FYTWdkMjl5YTNOY2JtTmhjbk44UGx4dUlDQnNiU2h6Y0dWbFpDQitJR1JwYzNRZ0xDQmtZWFJoUFNCZktWeHVYRzVjYm1CZ1lDSjkgLS0+XG5cbmBgYHJcbiMgVGhpcyBnaXZlcyBhbiBlcnJvcjpcbmNhcnN8PlxuICBsbShzcGVlZCB+IGRpc3QpXG5cblxuIyB0aGlzIHdvcmtzXG5jYXJzfD5cbiAgbG0oc3BlZWQgfiBkaXN0ICwgZGF0YT0gXylcblxuXG5gYGBcblxuPCEtLSBybmItc291cmNlLWVuZCAtLT5cbiJ9 -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBUaGlzIGdpdmVzIGFuIGVycm9yOlxuY2Fyc3w+XG4gIGxtKHNwZWVkIH4gZGlzdClcblxuXG4jIHRoaXMgd29ya3NcbmNhcnN8PlxuICBsbShzcGVlZCB+IGRpc3QgLCBkYXRhPSBfKVxuXG5cbmBgYCJ9 -->
 <pre class="r"><code># This gives an error:
 cars|&gt;
@@ -1835,6 +1835,7 @@ cars|&gt;
   lm(speed ~ dist , data= _)
 </code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>The <code>%&gt;%</code> is a version of the pipe that is associated
@@ -1845,11 +1846,13 @@ to reference data. I mentions it here because you might see it in some
 code (although I’ve tried to avoid it in my code!)</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG48IS0tIHJuYi1zb3VyY2UtYmVnaW4gZXlKa1lYUmhJam9pWUdCZ2NseHViR2xpY21GeWVTaHRZV2R5YVhSMGNpbGNibU5oY25NbFBpVmNiaUFnYkcwb2MzQmxaV1FnZmlCa2FYTjBMQ0JrWVhSaFBTNHBYRzVnWUdBaWZRPT0gLS0+XG5cbmBgYHJcbmxpYnJhcnkobWFncml0dHIpXG5jYXJzJT4lXG4gIGxtKHNwZWVkIH4gZGlzdCwgZGF0YT0uKVxuYGBgXG5cbjwhLS0gcm5iLXNvdXJjZS1lbmQgLS0+XG4ifQ== -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShtYWdyaXR0cilcbmNhcnMlPiVcbiAgbG0oc3BlZWQgfiBkaXN0LCBkYXRhPS4pXG5gYGAifQ== -->
 <pre class="r"><code>library(magrittr)
 cars%&gt;%
   lm(speed ~ dist, data=.)</code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 </div>
@@ -1858,6 +1861,7 @@ cars%&gt;%
 <p>Restate the following operation using a sequence of pipes</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG48IS0tIHJuYi1zb3VyY2UtYmVnaW4gZXlKa1lYUmhJam9pWUdCZ2NseHVYRzVqYUdWelptRnRQQzF6ZFdKelpYUW9ZMmhsY3l3Z2MyVnNaV04wUFdaaGJXbHNlU2tnSXlCeVpYUnlhV1YyYVc1bklHOXViSGtnZEdobElHWmhiV2xzYVdWeklHTnZiSFZ0Ymx4dVhHNWphR1Z6Wm1GdFBDMWhjMTltWVdOMGIzSW9ZMmhsYzJaaGJTa2dJeUJqYjI1MlpYSjBhVzVuSUhSdklHWmhZM1J2Y2x4dVhHNWphR1Z6Wm1GdFBDMTBZV0pzWlNoamFHVnpabUZ0S1NBaklHTnlaV0YwYVc1bklHRWdabkpsY1hWbGJtTjVJSFJoWW14bFhHNWNibU5vWlhObVlXMDhMWE52Y25Rb1kyaGxjMlpoYlNrZ0l5QnpiM0owYVc1bklHWnliMjBnYkc5M1pYTjBJSFJ2SUdocFoyaGxjM1JjYmx4dVhHNWNibUJnWUNKOSAtLT5cblxuYGBgclxuXG5jaGVzZmFtPC1zdWJzZXQoY2hlcywgc2VsZWN0PWZhbWlseSkgIyByZXRyaWV2aW5nIG9ubHkgdGhlIGZhbWlsaWVzIGNvbHVtblxuXG5jaGVzZmFtPC1hc19mYWN0b3IoY2hlc2ZhbSkgIyBjb252ZXJ0aW5nIHRvIGZhY3RvclxuXG5jaGVzZmFtPC10YWJsZShjaGVzZmFtKSAjIGNyZWF0aW5nIGEgZnJlcXVlbmN5IHRhYmxlXG5cbmNoZXNmYW08LXNvcnQoY2hlc2ZhbSkgIyBzb3J0aW5nIGZyb20gbG93ZXN0IHRvIGhpZ2hlc3RcblxuXG5cbmBgYFxuXG48IS0tIHJuYi1zb3VyY2UtZW5kIC0tPlxuIn0= -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG5jaGVzZmFtPC1zdWJzZXQoY2hlcywgc2VsZWN0PWZhbWlseSkgIyByZXRyaWV2aW5nIG9ubHkgdGhlIGZhbWlsaWVzIGNvbHVtblxuXG5jaGVzZmFtPC1hc19mYWN0b3IoY2hlc2ZhbSkgIyBjb252ZXJ0aW5nIHRvIGZhY3RvclxuXG5jaGVzZmFtPC10YWJsZShjaGVzZmFtKSAjIGNyZWF0aW5nIGEgZnJlcXVlbmN5IHRhYmxlXG5cbmNoZXNmYW08LXNvcnQoY2hlc2ZhbSkgIyBzb3J0aW5nIGZyb20gbG93ZXN0IHRvIGhpZ2hlc3RcblxuXG5cbmBgYCJ9 -->
 <pre class="r"><code>
 chesfam&lt;-subset(ches, select=family) # retrieving only the families column
@@ -1869,14 +1873,17 @@ chesfam&lt;-table(chesfam) # creating a frequency table
 chesfam&lt;-sort(chesfam) # sorting from lowest to highest
 </code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG48IS0tIHJuYi1zb3VyY2UtYmVnaW4gZXlKa1lYUmhJam9pWUdCZ2NseHVJeUIwZVhCbElIbHZkWElnWTI5a1pTQm9aWEpsTGk0dVhHNWNibUJnWUNKOSAtLT5cblxuYGBgclxuIyB0eXBlIHlvdXIgY29kZSBoZXJlLi4uXG5cbmBgYFxuXG48IS0tIHJuYi1zb3VyY2UtZW5kIC0tPlxuIn0= -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyB0eXBlIHlvdXIgY29kZSBoZXJlLi4uXG5cbmBgYCJ9 -->
 <pre class="r"><code># type your code here...
 </code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 </div>
@@ -1887,10 +1894,12 @@ EU members (you’ll want to use the <code>subset</code> function for
 this)</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG48IS0tIHJuYi1zb3VyY2UtYmVnaW4gZXlKa1lYUmhJam9pWUdCZ2NseHVJeUIwZVhCbElIbHZkWElnWTI5a1pTQm9aWEpsTGk0dVhHNWNibHh1WEc1Z1lHQWlmUT09IC0tPlxuXG5gYGByXG4jIHR5cGUgeW91ciBjb2RlIGhlcmUuLi5cblxuXG5cbmBgYFxuXG48IS0tIHJuYi1zb3VyY2UtZW5kIC0tPlxuIn0= -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyB0eXBlIHlvdXIgY29kZSBoZXJlLi4uXG5cblxuXG5gYGAifQ== -->
 <pre class="r"><code># type your code here...
 </code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 </div>
@@ -1901,6 +1910,7 @@ this)</p>
 party)</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG48IS0tIHJuYi1zb3VyY2UtYmVnaW4gZXlKa1lYUmhJam9pWUdCZ2NseHVJeUIwZVhCbElIbHZkWElnWTI5a1pTQm9aWEpsTGk0dVhHNWNibHh1SUNCY2JseHVYRzVnWUdBaWZRPT0gLS0+XG5cbmBgYHJcbiMgdHlwZSB5b3VyIGNvZGUgaGVyZS4uLlxuXG5cbiAgXG5cblxuYGBgXG5cbjwhLS0gcm5iLXNvdXJjZS1lbmQgLS0+XG4ifQ== -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyB0eXBlIHlvdXIgY29kZSBoZXJlLi4uXG5cblxuICBcblxuXG5gYGAifQ== -->
 <pre class="r"><code># type your code here...
 
@@ -1908,6 +1918,7 @@ party)</p>
   
 </code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 </div>
@@ -1917,10 +1928,12 @@ party)</p>
 basic is by using a logical expression:</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG48IS0tIHJuYi1zb3VyY2UtYmVnaW4gZXlKa1lYUmhJam9pWUdCZ2NseHVZMmhsYzF0M2FHbGphQ2hqYUdWekpHWmhiV2xzZVQwOVhDSm5jbVZsYmx3aUtTd2dYVnh1WEc1Y2JtQmdZQ0o5IC0tPlxuXG5gYGByXG5jaGVzW3doaWNoKGNoZXMkZmFtaWx5PT1cImdyZWVuXCIpLCBdXG5cblxuYGBgXG5cbjwhLS0gcm5iLXNvdXJjZS1lbmQgLS0+XG4ifQ== -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY2hlc1t3aGljaChjaGVzJGZhbWlseT09XCJncmVlblwiKSwgXVxuXG5cbmBgYCJ9 -->
 <pre class="r"><code>ches[which(ches$family==&quot;green&quot;), ]
 </code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>We can also use the <code>subset</code> function. Note that this
@@ -1929,12 +1942,14 @@ reference columns within that data set without needing to use the
 <code>$</code> notation:</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG48IS0tIHJuYi1zb3VyY2UtYmVnaW4gZXlKa1lYUmhJam9pWUdCZ2NseHVjM1ZpYzJWMEtHTm9aWE1zSUdaaGJXbHNlU0E5UFNCY0ltZHlaV1Z1WENJcFhHNWNiaU1nVDFJNlhHNGpJR2R5WldWdVgzQmhjblJwWlhNZ2ZENGdjM1ZpYzJWMEtHWmhiV2xzZVQwOVhDSm5jbVZsYmx3aUtWeHVZR0JnSW4wPSAtLT5cblxuYGBgclxuc3Vic2V0KGNoZXMsIGZhbWlseSA9PSBcImdyZWVuXCIpXG5cbiMgT1I6XG4jIGdyZWVuX3BhcnRpZXMgfD4gc3Vic2V0KGZhbWlseT09XCJncmVlblwiKVxuYGBgXG5cbjwhLS0gcm5iLXNvdXJjZS1lbmQgLS0+XG4ifQ== -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3Vic2V0KGNoZXMsIGZhbWlseSA9PSBcImdyZWVuXCIpXG5cbiMgT1I6XG4jIGdyZWVuX3BhcnRpZXMgfD4gc3Vic2V0KGZhbWlseT09XCJncmVlblwiKVxuYGBgIn0= -->
 <pre class="r"><code>subset(ches, family == &quot;green&quot;)
 
 # OR:
 # green_parties |&gt; subset(family==&quot;green&quot;)</code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>Another option we’ll explore more in the future is the
@@ -1943,11 +1958,13 @@ is almost identical to the syntax for <code>subset</code>, and it also
 takes a dataset as its first argument:</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG48IS0tIHJuYi1zb3VyY2UtYmVnaW4gZXlKa1lYUmhJam9pWUdCZ2NseHViR2xpY21GeWVTaGtjR3g1Y2lsY2JtTm9aWE44UG1acGJIUmxjaWhtWVcxcGJIazlQVndpWjNKbFpXNWNJaWxjYmx4dVhHNWdZR0FpZlE9PSAtLT5cblxuYGBgclxubGlicmFyeShkcGx5cilcbmNoZXN8PmZpbHRlcihmYW1pbHk9PVwiZ3JlZW5cIilcblxuXG5gYGBcblxuPCEtLSBybmItc291cmNlLWVuZCAtLT5cbiJ9 -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShkcGx5cilcbmNoZXN8PmZpbHRlcihmYW1pbHk9PVwiZ3JlZW5cIilcblxuXG5gYGAifQ== -->
 <pre class="r"><code>library(dplyr)
 ches|&gt;filter(family==&quot;green&quot;)
 </code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 </div>
@@ -1969,15 +1986,11 @@ vote in the previous election</p>
 two-dimensional frequency tables.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGFibGUoY2hlcyRmYW1pbHkpXG5gYGAifQ== -->
-<pre class="r"><code>table(ches$family)</code></pre>
+<!-- rnb-output-begin eyJkYXRhIjoiXG48IS0tIHJuYi1zb3VyY2UtYmVnaW4gZXlKa1lYUmhJam9pWUdCZ2NseHVkR0ZpYkdVb1kyaGxjeVJtWVcxcGJIa3BYRzVjYm1CZ1lDSjkgLS0+XG5cbmBgYHJcbnRhYmxlKGNoZXMkZmFtaWx5KVxuXG5gYGBcblxuPCEtLSBybmItc291cmNlLWVuZCAtLT5cbiJ9 -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGFibGUoY2hlcyRmYW1pbHkpXG5cbmBgYCJ9 -->
+<pre class="r"><code>table(ches$family)
+</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG4gICAgICByYWQgcmlnaHQgICAgICAgICAgICBjb25zICAgICAgICAgbGliZXJhbCAgICAgICBjaHJpc3RkZW0gICAgICAgc29jaWFsaXN0ICAgICAgICByYWQgbGVmdCAgICAgICAgICAgZ3JlZW4gXG4gICAgICAgICAgICAgMzIgICAgICAgICAgICAgIDMyICAgICAgICAgICAgICA0MCAgICAgICAgICAgICAgMTUgICAgICAgICAgICAgIDM4ICAgICAgICAgICAgICAyNCAgICAgICAgICAgICAgMjMgXG4gICAgcmVnaW9uYWxpc3QgICAgICAgbm8gZmFtaWx5ICAgIGNvbmZlc3Npb25hbCBhZ3Jhcmlhbi9jZW50cmUgXG4gICAgICAgICAgICAgMTkgICAgICAgICAgICAgIDE2ICAgICAgICAgICAgICAgMyAgICAgICAgICAgICAgIDUgXG4ifQ== -->
-<pre><code>
-      rad right            cons         liberal       christdem       socialist        rad left           green 
-             32              32              40              15              38              24              23 
-    regionalist       no family    confessional agrarian/centre 
-             19              16               3               5 </code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -1987,17 +2000,12 @@ each group, rather than the raw frequencies. You can use the
 existing table object.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG48IS0tIHJuYi1zb3VyY2UtYmVnaW4gZXlKa1lYUmhJam9pWUdCZ2NseHVkR0ZpYkdWZmIyWmZabUZ0YVd4cFpYTThMWFJoWW14bEtHTm9aWE1rWm1GdGFXeDVLVnh1WEc1d2NtOXdMblJoWW14bEtIUmhZbXhsWDI5bVgyWmhiV2xzYVdWektWeHVZR0JnSW4wPSAtLT5cblxuYGBgclxudGFibGVfb2ZfZmFtaWxpZXM8LXRhYmxlKGNoZXMkZmFtaWx5KVxuXG5wcm9wLnRhYmxlKHRhYmxlX29mX2ZhbWlsaWVzKVxuYGBgXG5cbjwhLS0gcm5iLXNvdXJjZS1lbmQgLS0+XG4ifQ== -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGFibGVfb2ZfZmFtaWxpZXM8LXRhYmxlKGNoZXMkZmFtaWx5KVxuXG5wcm9wLnRhYmxlKHRhYmxlX29mX2ZhbWlsaWVzKVxuYGBgIn0= -->
 <pre class="r"><code>table_of_families&lt;-table(ches$family)
 
 prop.table(table_of_families)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG4gICAgICByYWQgcmlnaHQgICAgICAgICAgICBjb25zICAgICAgICAgbGliZXJhbCAgICAgICBjaHJpc3RkZW0gICAgICAgc29jaWFsaXN0ICAgICAgICByYWQgbGVmdCAgICAgICAgICAgZ3JlZW4gXG4gICAgIDAuMTI5NTU0NjYgICAgICAwLjEyOTU1NDY2ICAgICAgMC4xNjE5NDMzMiAgICAgIDAuMDYwNzI4NzQgICAgICAwLjE1Mzg0NjE1ICAgICAgMC4wOTcxNjU5OSAgICAgIDAuMDkzMTE3NDEgXG4gICAgcmVnaW9uYWxpc3QgICAgICAgbm8gZmFtaWx5ICAgIGNvbmZlc3Npb25hbCBhZ3Jhcmlhbi9jZW50cmUgXG4gICAgIDAuMDc2OTIzMDggICAgICAwLjA2NDc3NzMzICAgICAgMC4wMTIxNDU3NSAgICAgIDAuMDIwMjQyOTEgXG4ifQ== -->
-<pre><code>
-      rad right            cons         liberal       christdem       socialist        rad left           green 
-     0.12955466      0.12955466      0.16194332      0.06072874      0.15384615      0.09716599      0.09311741 
-    regionalist       no family    confessional agrarian/centre 
-     0.07692308      0.06477733      0.01214575      0.02024291 </code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -2008,24 +2016,12 @@ generate a cross tab. The first group will be presented in the rows, and
 the second group in the columns.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG50YWJsZShjaGVzJGZhbWlseSwgY2hlcyRnb3Z0KVxuYGBgIn0= -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG48IS0tIHJuYi1zb3VyY2UtYmVnaW4gZXlKa1lYUmhJam9pWUdCZ2NseHVYRzUwWVdKc1pTaGphR1Z6SkdaaGJXbHNlU3dnWTJobGN5Um5iM1owS1Z4dVhHNWdZR0FpZlE9PSAtLT5cblxuYGBgclxuXG50YWJsZShjaGVzJGZhbWlseSwgY2hlcyRnb3Z0KVxuXG5gYGBcblxuPCEtLSBybmItc291cmNlLWVuZCAtLT5cbiJ9 -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG50YWJsZShjaGVzJGZhbWlseSwgY2hlcyRnb3Z0KVxuXG5gYGAifQ== -->
 <pre class="r"><code>
-table(ches$family, ches$govt)</code></pre>
+table(ches$family, ches$govt)
+</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiICAgICAgICAgICAgICAgICBcbiAgICAgICAgICAgICAgICAgIG5vdCBpbiBnb3Zlcm5tZW50IDAuNSBpbiBnb3Zlcm5tZW50XG4gIHJhZCByaWdodCAgICAgICAgICAgICAgICAgICAgICAyNSAgIDMgICAgICAgICAgICAgNFxuICBjb25zICAgICAgICAgICAgICAgICAgICAgICAgICAgMTkgICAyICAgICAgICAgICAgMTFcbiAgbGliZXJhbCAgICAgICAgICAgICAgICAgICAgICAgIDI1ICAgMiAgICAgICAgICAgIDEzXG4gIGNocmlzdGRlbSAgICAgICAgICAgICAgICAgICAgICAgNyAgIDEgICAgICAgICAgICAgN1xuICBzb2NpYWxpc3QgICAgICAgICAgICAgICAgICAgICAgMjQgICA1ICAgICAgICAgICAgIDlcbiAgcmFkIGxlZnQgICAgICAgICAgICAgICAgICAgICAgIDIxICAgMyAgICAgICAgICAgICAwXG4gIGdyZWVuICAgICAgICAgICAgICAgICAgICAgICAgICAxOSAgIDIgICAgICAgICAgICAgMlxuICByZWdpb25hbGlzdCAgICAgICAgICAgICAgICAgICAgMTYgICAyICAgICAgICAgICAgIDFcbiAgbm8gZmFtaWx5ICAgICAgICAgICAgICAgICAgICAgIDEzICAgMCAgICAgICAgICAgICAzXG4gIGNvbmZlc3Npb25hbCAgICAgICAgICAgICAgICAgICAgMyAgIDAgICAgICAgICAgICAgMFxuICBhZ3Jhcmlhbi9jZW50cmUgICAgICAgICAgICAgICAgIDQgICAwICAgICAgICAgICAgIDFcbiJ9 -->
-<pre><code>                 
-                  not in government 0.5 in government
-  rad right                      25   3             4
-  cons                           19   2            11
-  liberal                        25   2            13
-  christdem                       7   1             7
-  socialist                      24   5             9
-  rad left                       21   3             0
-  green                          19   2             2
-  regionalist                    16   2             1
-  no family                      13   0             3
-  confessional                    3   0             0
-  agrarian/centre                 4   0             1</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -2033,24 +2029,12 @@ table(ches$family, ches$govt)</code></pre>
 table will give us the percentage of observations within each cell.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG50YWJsZShjaGVzJGZhbWlseSwgY2hlcyRnb3Z0KXw+cHJvcC50YWJsZSgpXG5gYGAifQ== -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG48IS0tIHJuYi1zb3VyY2UtYmVnaW4gZXlKa1lYUmhJam9pWUdCZ2NseHVYRzUwWVdKc1pTaGphR1Z6SkdaaGJXbHNlU3dnWTJobGN5Um5iM1owS1h3K2NISnZjQzUwWVdKc1pTZ3BYRzVjYm1CZ1lDSjkgLS0+XG5cbmBgYHJcblxudGFibGUoY2hlcyRmYW1pbHksIGNoZXMkZ292dCl8PnByb3AudGFibGUoKVxuXG5gYGBcblxuPCEtLSBybmItc291cmNlLWVuZCAtLT5cbiJ9 -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG50YWJsZShjaGVzJGZhbWlseSwgY2hlcyRnb3Z0KXw+cHJvcC50YWJsZSgpXG5cbmBgYCJ9 -->
 <pre class="r"><code>
-table(ches$family, ches$govt)|&gt;prop.table()</code></pre>
+table(ches$family, ches$govt)|&gt;prop.table()
+</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiICAgICAgICAgICAgICAgICBcbiAgICAgICAgICAgICAgICAgIG5vdCBpbiBnb3Zlcm5tZW50ICAgICAgICAgMC41IGluIGdvdmVybm1lbnRcbiAgcmFkIHJpZ2h0ICAgICAgICAgICAgIDAuMTAxMjE0NTc1IDAuMDEyMTQ1NzQ5ICAgMC4wMTYxOTQzMzJcbiAgY29ucyAgICAgICAgICAgICAgICAgIDAuMDc2OTIzMDc3IDAuMDA4MDk3MTY2ICAgMC4wNDQ1MzQ0MTNcbiAgbGliZXJhbCAgICAgICAgICAgICAgIDAuMTAxMjE0NTc1IDAuMDA4MDk3MTY2ICAgMC4wNTI2MzE1NzlcbiAgY2hyaXN0ZGVtICAgICAgICAgICAgIDAuMDI4MzQwMDgxIDAuMDA0MDQ4NTgzICAgMC4wMjgzNDAwODFcbiAgc29jaWFsaXN0ICAgICAgICAgICAgIDAuMDk3MTY1OTkyIDAuMDIwMjQyOTE1ICAgMC4wMzY0MzcyNDdcbiAgcmFkIGxlZnQgICAgICAgICAgICAgIDAuMDg1MDIwMjQzIDAuMDEyMTQ1NzQ5ICAgMC4wMDAwMDAwMDBcbiAgZ3JlZW4gICAgICAgICAgICAgICAgIDAuMDc2OTIzMDc3IDAuMDA4MDk3MTY2ICAgMC4wMDgwOTcxNjZcbiAgcmVnaW9uYWxpc3QgICAgICAgICAgIDAuMDY0Nzc3MzI4IDAuMDA4MDk3MTY2ICAgMC4wMDQwNDg1ODNcbiAgbm8gZmFtaWx5ICAgICAgICAgICAgIDAuMDUyNjMxNTc5IDAuMDAwMDAwMDAwICAgMC4wMTIxNDU3NDlcbiAgY29uZmVzc2lvbmFsICAgICAgICAgIDAuMDEyMTQ1NzQ5IDAuMDAwMDAwMDAwICAgMC4wMDAwMDAwMDBcbiAgYWdyYXJpYW4vY2VudHJlICAgICAgIDAuMDE2MTk0MzMyIDAuMDAwMDAwMDAwICAgMC4wMDQwNDg1ODNcbiJ9 -->
-<pre><code>                 
-                  not in government         0.5 in government
-  rad right             0.101214575 0.012145749   0.016194332
-  cons                  0.076923077 0.008097166   0.044534413
-  liberal               0.101214575 0.008097166   0.052631579
-  christdem             0.028340081 0.004048583   0.028340081
-  socialist             0.097165992 0.020242915   0.036437247
-  rad left              0.085020243 0.012145749   0.000000000
-  green                 0.076923077 0.008097166   0.008097166
-  regionalist           0.064777328 0.008097166   0.004048583
-  no family             0.052631579 0.000000000   0.012145749
-  confessional          0.012145749 0.000000000   0.000000000
-  agrarian/centre       0.016194332 0.000000000   0.004048583</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -2071,26 +2055,14 @@ and if the total number is in the columns, I’ll use
 <code>margin=2</code></p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG5nb3Z0X3BhcnRpZXM8LXRhYmxlKFwiZmFtaWx5XCI9Y2hlcyRmYW1pbHksIFwiaW4gZ292dD9cIj1jaGVzJGdvdnQpXG5cbmdvdnRfcGFydGllc1xuYGBgIn0= -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG48IS0tIHJuYi1zb3VyY2UtYmVnaW4gZXlKa1lYUmhJam9pWUdCZ2NseHVYRzVuYjNaMFgzQmhjblJwWlhNOExYUmhZbXhsS0Z3aVptRnRhV3g1WENJOVkyaGxjeVJtWVcxcGJIa3NJRndpYVc0Z1oyOTJkRDljSWoxamFHVnpKR2R2ZG5RcFhHNWNibWR2ZG5SZmNHRnlkR2xsYzF4dVhHNWdZR0FpZlE9PSAtLT5cblxuYGBgclxuXG5nb3Z0X3BhcnRpZXM8LXRhYmxlKFwiZmFtaWx5XCI9Y2hlcyRmYW1pbHksIFwiaW4gZ292dD9cIj1jaGVzJGdvdnQpXG5cbmdvdnRfcGFydGllc1xuXG5gYGBcblxuPCEtLSBybmItc291cmNlLWVuZCAtLT5cbiJ9 -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG5nb3Z0X3BhcnRpZXM8LXRhYmxlKFwiZmFtaWx5XCI9Y2hlcyRmYW1pbHksIFwiaW4gZ292dD9cIj1jaGVzJGdvdnQpXG5cbmdvdnRfcGFydGllc1xuXG5gYGAifQ== -->
 <pre class="r"><code>
 govt_parties&lt;-table(&quot;family&quot;=ches$family, &quot;in govt?&quot;=ches$govt)
 
-govt_parties</code></pre>
+govt_parties
+</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiICAgICAgICAgICAgICAgICBpbiBnb3Z0P1xuZmFtaWx5ICAgICAgICAgICAgbm90IGluIGdvdmVybm1lbnQgMC41IGluIGdvdmVybm1lbnRcbiAgcmFkIHJpZ2h0ICAgICAgICAgICAgICAgICAgICAgIDI1ICAgMyAgICAgICAgICAgICA0XG4gIGNvbnMgICAgICAgICAgICAgICAgICAgICAgICAgICAxOSAgIDIgICAgICAgICAgICAxMVxuICBsaWJlcmFsICAgICAgICAgICAgICAgICAgICAgICAgMjUgICAyICAgICAgICAgICAgMTNcbiAgY2hyaXN0ZGVtICAgICAgICAgICAgICAgICAgICAgICA3ICAgMSAgICAgICAgICAgICA3XG4gIHNvY2lhbGlzdCAgICAgICAgICAgICAgICAgICAgICAyNCAgIDUgICAgICAgICAgICAgOVxuICByYWQgbGVmdCAgICAgICAgICAgICAgICAgICAgICAgMjEgICAzICAgICAgICAgICAgIDBcbiAgZ3JlZW4gICAgICAgICAgICAgICAgICAgICAgICAgIDE5ICAgMiAgICAgICAgICAgICAyXG4gIHJlZ2lvbmFsaXN0ICAgICAgICAgICAgICAgICAgICAxNiAgIDIgICAgICAgICAgICAgMVxuICBubyBmYW1pbHkgICAgICAgICAgICAgICAgICAgICAgMTMgICAwICAgICAgICAgICAgIDNcbiAgY29uZmVzc2lvbmFsICAgICAgICAgICAgICAgICAgICAzICAgMCAgICAgICAgICAgICAwXG4gIGFncmFyaWFuL2NlbnRyZSAgICAgICAgICAgICAgICAgNCAgIDAgICAgICAgICAgICAgMVxuIn0= -->
-<pre><code>                 in govt?
-family            not in government 0.5 in government
-  rad right                      25   3             4
-  cons                           19   2            11
-  liberal                        25   2            13
-  christdem                       7   1             7
-  socialist                      24   5             9
-  rad left                       21   3             0
-  green                          19   2             2
-  regionalist                    16   2             1
-  no family                      13   0             3
-  confessional                    3   0             0
-  agrarian/centre                 4   0             1</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -2103,13 +2075,13 @@ family            not in government 0.5 in government
 percentage of radical right parties that are in government in 2019:</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGFibGUoXCJmYW1pbHlcIj1jaGVzJGZhbWlseSwgXCJpbiBnb3Z0P1wiPWNoZXMkZ292dCl8PlxuICBwcm9wLnRhYmxlKG1hcmdpbj0zKVxuXG5gYGAifQ== -->
-<pre class="r"><code>table(&quot;family&quot;=ches$family, &quot;in govt?&quot;=ches$govt)|&gt;
+<!-- rnb-output-begin eyJkYXRhIjoiXG48IS0tIHJuYi1zb3VyY2UtYmVnaW4gZXlKa1lYUmhJam9pWUdCZ2NseHVYRzUwWVdKc1pTaGNJbVpoYldsc2VWd2lQV05vWlhNa1ptRnRhV3g1TENCY0ltbHVJR2R2ZG5RL1hDSTlZMmhsY3lSbmIzWjBLWHcrWEc0Z0lIQnliM0F1ZEdGaWJHVW9iV0Z5WjJsdVBUTXBYRzVjYmx4dVlHQmdJbjA9IC0tPlxuXG5gYGByXG5cbnRhYmxlKFwiZmFtaWx5XCI9Y2hlcyRmYW1pbHksIFwiaW4gZ292dD9cIj1jaGVzJGdvdnQpfD5cbiAgcHJvcC50YWJsZShtYXJnaW49MylcblxuXG5gYGBcblxuPCEtLSBybmItc291cmNlLWVuZCAtLT5cbiJ9 -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG50YWJsZShcImZhbWlseVwiPWNoZXMkZmFtaWx5LCBcImluIGdvdnQ/XCI9Y2hlcyRnb3Z0KXw+XG4gIHByb3AudGFibGUobWFyZ2luPTMpXG5cblxuYGBgIn0= -->
+<pre class="r"><code>
+table(&quot;family&quot;=ches$family, &quot;in govt?&quot;=ches$govt)|&gt;
   prop.table(margin=3)
 </code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiRXJyb3IgaW4gYXBwbHkoeCwgbWFyZ2luLCBzdW0pIDogJ01BUkdJTicgZG9lcyBub3QgbWF0Y2ggZGltKFgpXG4ifQ== -->
-<pre><code>Error in apply(x, margin, sum) : &#39;MARGIN&#39; does not match dim(X)</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -2123,37 +2095,16 @@ janitor package</a>, which allows you to use the <code>tabyl</code>
 command to create tables:</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG5saWJyYXJ5KGphbml0b3IpXG5gYGAifQ== -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG48IS0tIHJuYi1zb3VyY2UtYmVnaW4gZXlKa1lYUmhJam9pWUdCZ2NseHVYRzVzYVdKeVlYSjVLR3BoYm1sMGIzSXBYRzVjYm5ReElEd3RJSFJoWW5sc0tHUmhkRDFqYUdWekxDQjJZWEl4UFdaaGJXbHNlU3dnZG1GeU1qMW5iM1owS1Z4dVhHNTBNVnh1WEc1Z1lHQWlmUT09IC0tPlxuXG5gYGByXG5cbmxpYnJhcnkoamFuaXRvcilcblxudDEgPC0gdGFieWwoZGF0PWNoZXMsIHZhcjE9ZmFtaWx5LCB2YXIyPWdvdnQpXG5cbnQxXG5cbmBgYFxuXG48IS0tIHJuYi1zb3VyY2UtZW5kIC0tPlxuIn0= -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG5saWJyYXJ5KGphbml0b3IpXG5cbnQxIDwtIHRhYnlsKGRhdD1jaGVzLCB2YXIxPWZhbWlseSwgdmFyMj1nb3Z0KVxuXG50MVxuXG5gYGAifQ== -->
 <pre class="r"><code>
-library(janitor)</code></pre>
+library(janitor)
+
+t1 &lt;- tabyl(dat=ches, var1=family, var2=govt)
+
+t1
+</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogcGFja2FnZSDigJhqYW5pdG9y4oCZIHdhcyBidWlsdCB1bmRlciBSIHZlcnNpb24gNC4zLjJcblxuQXR0YWNoaW5nIHBhY2thZ2U6IOKAmGphbml0b3LigJlcblxuVGhlIGZvbGxvd2luZyBvYmplY3RzIGFyZSBtYXNrZWQgZnJvbSDigJhwYWNrYWdlOnN0YXRz4oCZOlxuXG4gICAgY2hpc3EudGVzdCwgZmlzaGVyLnRlc3RcbiJ9 -->
-<pre><code>Warning: package ‘janitor’ was built under R version 4.3.2
-
-Attaching package: ‘janitor’
-
-The following objects are masked from ‘package:stats’:
-
-    chisq.test, fisher.test</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudDEgPC0gdGFieWwoZGF0PWNoZXMsIHZhcjE9ZmFtaWx5LCB2YXIyPWdvdnQpXG5cbnQxXG5gYGAifQ== -->
-<pre class="r"><code>t1 &lt;- tabyl(dat=ches, var1=family, var2=govt)
-
-t1</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiICAgICAgICAgIGZhbWlseSBub3QgaW4gZ292ZXJubWVudCAwLjUgaW4gZ292ZXJubWVudFxuICAgICAgIHJhZCByaWdodCAgICAgICAgICAgICAgICAyNSAgIDMgICAgICAgICAgICAgNFxuICAgICAgICAgICAgY29ucyAgICAgICAgICAgICAgICAxOSAgIDIgICAgICAgICAgICAxMVxuICAgICAgICAgbGliZXJhbCAgICAgICAgICAgICAgICAyNSAgIDIgICAgICAgICAgICAxM1xuICAgICAgIGNocmlzdGRlbSAgICAgICAgICAgICAgICAgNyAgIDEgICAgICAgICAgICAgN1xuICAgICAgIHNvY2lhbGlzdCAgICAgICAgICAgICAgICAyNCAgIDUgICAgICAgICAgICAgOVxuICAgICAgICByYWQgbGVmdCAgICAgICAgICAgICAgICAyMSAgIDMgICAgICAgICAgICAgMFxuICAgICAgICAgICBncmVlbiAgICAgICAgICAgICAgICAxOSAgIDIgICAgICAgICAgICAgMlxuICAgICByZWdpb25hbGlzdCAgICAgICAgICAgICAgICAxNiAgIDIgICAgICAgICAgICAgMVxuICAgICAgIG5vIGZhbWlseSAgICAgICAgICAgICAgICAxMyAgIDAgICAgICAgICAgICAgM1xuICAgIGNvbmZlc3Npb25hbCAgICAgICAgICAgICAgICAgMyAgIDAgICAgICAgICAgICAgMFxuIGFncmFyaWFuL2NlbnRyZSAgICAgICAgICAgICAgICAgNCAgIDAgICAgICAgICAgICAgMVxuIn0= -->
-<pre><code>          family not in government 0.5 in government
-       rad right                25   3             4
-            cons                19   2            11
-         liberal                25   2            13
-       christdem                 7   1             7
-       socialist                24   5             9
-        rad left                21   3             0
-           green                19   2             2
-     regionalist                16   2             1
-       no family                13   0             3
-    confessional                 3   0             0
- agrarian/centre                 4   0             1</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -2162,28 +2113,16 @@ lot of nice options for <code>adorning</code> the table with additional
 statistics:</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG5cbnQxfD5cbiAgYWRvcm5fdG90YWxzKFwicm93XCIpfD4gIyBhZGQgdG90YWxzXG4gIGFkb3JuX3BlcmNlbnRhZ2VzKFwicm93XCIpfD4gIyBjYWxjdWxhdGUgcGVyY2VudGFnZXNcbiAgYWRvcm5fcGN0X2Zvcm1hdHRpbmcoKSAjIGZvcm1hdCBwZXJjZW50YWdlc1xuYGBgIn0= -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG48IS0tIHJuYi1zb3VyY2UtYmVnaW4gZXlKa1lYUmhJam9pWUdCZ2NseHVYRzVjYm5ReGZENWNiaUFnWVdSdmNtNWZkRzkwWVd4ektGd2ljbTkzWENJcGZENGdJeUJoWkdRZ2RHOTBZV3h6WEc0Z0lHRmtiM0p1WDNCbGNtTmxiblJoWjJWektGd2ljbTkzWENJcGZENGdJeUJqWVd4amRXeGhkR1VnY0dWeVkyVnVkR0ZuWlhOY2JpQWdZV1J2Y201ZmNHTjBYMlp2Y20xaGRIUnBibWNvS1NBaklHWnZjbTFoZENCd1pYSmpaVzUwWVdkbGMxeHVYRzVnWUdBaWZRPT0gLS0+XG5cbmBgYHJcblxuXG50MXw+XG4gIGFkb3JuX3RvdGFscyhcInJvd1wiKXw+ICMgYWRkIHRvdGFsc1xuICBhZG9ybl9wZXJjZW50YWdlcyhcInJvd1wiKXw+ICMgY2FsY3VsYXRlIHBlcmNlbnRhZ2VzXG4gIGFkb3JuX3BjdF9mb3JtYXR0aW5nKCkgIyBmb3JtYXQgcGVyY2VudGFnZXNcblxuYGBgXG5cbjwhLS0gcm5iLXNvdXJjZS1lbmQgLS0+XG4ifQ== -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG5cbnQxfD5cbiAgYWRvcm5fdG90YWxzKFwicm93XCIpfD4gIyBhZGQgdG90YWxzXG4gIGFkb3JuX3BlcmNlbnRhZ2VzKFwicm93XCIpfD4gIyBjYWxjdWxhdGUgcGVyY2VudGFnZXNcbiAgYWRvcm5fcGN0X2Zvcm1hdHRpbmcoKSAjIGZvcm1hdCBwZXJjZW50YWdlc1xuXG5gYGAifQ== -->
 <pre class="r"><code>
 
 t1|&gt;
   adorn_totals(&quot;row&quot;)|&gt; # add totals
   adorn_percentages(&quot;row&quot;)|&gt; # calculate percentages
-  adorn_pct_formatting() # format percentages</code></pre>
+  adorn_pct_formatting() # format percentages
+</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiICAgICAgICAgIGZhbWlseSBub3QgaW4gZ292ZXJubWVudCAgIDAuNSBpbiBnb3Zlcm5tZW50XG4gICAgICAgcmFkIHJpZ2h0ICAgICAgICAgICAgIDc4LjElICA5LjQlICAgICAgICAgMTIuNSVcbiAgICAgICAgICAgIGNvbnMgICAgICAgICAgICAgNTkuNCUgIDYuMiUgICAgICAgICAzNC40JVxuICAgICAgICAgbGliZXJhbCAgICAgICAgICAgICA2Mi41JSAgNS4wJSAgICAgICAgIDMyLjUlXG4gICAgICAgY2hyaXN0ZGVtICAgICAgICAgICAgIDQ2LjclICA2LjclICAgICAgICAgNDYuNyVcbiAgICAgICBzb2NpYWxpc3QgICAgICAgICAgICAgNjMuMiUgMTMuMiUgICAgICAgICAyMy43JVxuICAgICAgICByYWQgbGVmdCAgICAgICAgICAgICA4Ny41JSAxMi41JSAgICAgICAgICAwLjAlXG4gICAgICAgICAgIGdyZWVuICAgICAgICAgICAgIDgyLjYlICA4LjclICAgICAgICAgIDguNyVcbiAgICAgcmVnaW9uYWxpc3QgICAgICAgICAgICAgODQuMiUgMTAuNSUgICAgICAgICAgNS4zJVxuICAgICAgIG5vIGZhbWlseSAgICAgICAgICAgICA4MS4yJSAgMC4wJSAgICAgICAgIDE4LjglXG4gICAgY29uZmVzc2lvbmFsICAgICAgICAgICAgMTAwLjAlICAwLjAlICAgICAgICAgIDAuMCVcbiBhZ3Jhcmlhbi9jZW50cmUgICAgICAgICAgICAgODAuMCUgIDAuMCUgICAgICAgICAyMC4wJVxuICAgICAgICAgICBUb3RhbCAgICAgICAgICAgICA3MS4zJSAgOC4xJSAgICAgICAgIDIwLjYlXG4ifQ== -->
-<pre><code>          family not in government   0.5 in government
-       rad right             78.1%  9.4%         12.5%
-            cons             59.4%  6.2%         34.4%
-         liberal             62.5%  5.0%         32.5%
-       christdem             46.7%  6.7%         46.7%
-       socialist             63.2% 13.2%         23.7%
-        rad left             87.5% 12.5%          0.0%
-           green             82.6%  8.7%          8.7%
-     regionalist             84.2% 10.5%          5.3%
-       no family             81.2%  0.0%         18.8%
-    confessional            100.0%  0.0%          0.0%
- agrarian/centre             80.0%  0.0%         20.0%
-           Total             71.3%  8.1%         20.6%</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -2200,21 +2139,16 @@ level of corruption salience in each country, we can run something like
 this:</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyB4ID0gdGhlIGZvcm11bGEsIEZVTj0gc2hvdWxkIGJlIGEgZnVuY3Rpb24geW91IHdhbnQgdG8gcnVuIGZvciBlYWNoIGdyb3VwXG5jb3JydXB0aW9uX3NhbGllbmNlIDwtIGFnZ3JlZ2F0ZSh4ID0gY29ycnVwdF9zYWxpZW5jZSB+IGNvdW50cnkgLCBGVU4gPSBtZWFuLCBkYXRhID0gY2hlcyApXG5jb3JydXB0aW9uX3NhbGllbmNlXG5gYGAifQ== -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG48IS0tIHJuYi1zb3VyY2UtYmVnaW4gZXlKa1lYUmhJam9pWUdCZ2NseHVJeUI0SUQwZ2RHaGxJR1p2Y20xMWJHRXNJRVpWVGowZ2MyaHZkV3hrSUdKbElHRWdablZ1WTNScGIyNGdlVzkxSUhkaGJuUWdkRzhnY25WdUlHWnZjaUJsWVdOb0lHZHliM1Z3WEc1amIzSnlkWEIwYVc5dVgzTmhiR2xsYm1ObElEd3RJR0ZuWjNKbFoyRjBaU2g0SUQwZ1kyOXljblZ3ZEY5ellXeHBaVzVqWlNCK0lHTnZkVzUwY25rZ0xDQmNiaUFnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lFWlZUaUE5SUcxbFlXNHNJRnh1SUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdJQ0FnSUNBZ0lDQWdaR0YwWVNBOUlHTm9aWE1nS1Z4dVkyOXljblZ3ZEdsdmJsOXpZV3hwWlc1alpWeHVYRzVnWUdBaWZRPT0gLS0+XG5cbmBgYHJcbiMgeCA9IHRoZSBmb3JtdWxhLCBGVU49IHNob3VsZCBiZSBhIGZ1bmN0aW9uIHlvdSB3YW50IHRvIHJ1biBmb3IgZWFjaCBncm91cFxuY29ycnVwdGlvbl9zYWxpZW5jZSA8LSBhZ2dyZWdhdGUoeCA9IGNvcnJ1cHRfc2FsaWVuY2UgfiBjb3VudHJ5ICwgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBGVU4gPSBtZWFuLCBcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGRhdGEgPSBjaGVzIClcbmNvcnJ1cHRpb25fc2FsaWVuY2VcblxuYGBgXG5cbjwhLS0gcm5iLXNvdXJjZS1lbmQgLS0+XG4ifQ== -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyB4ID0gdGhlIGZvcm11bGEsIEZVTj0gc2hvdWxkIGJlIGEgZnVuY3Rpb24geW91IHdhbnQgdG8gcnVuIGZvciBlYWNoIGdyb3VwXG5jb3JydXB0aW9uX3NhbGllbmNlIDwtIGFnZ3JlZ2F0ZSh4ID0gY29ycnVwdF9zYWxpZW5jZSB+IGNvdW50cnkgLCBcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEZVTiA9IG1lYW4sIFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZGF0YSA9IGNoZXMgKVxuY29ycnVwdGlvbl9zYWxpZW5jZVxuXG5gYGAifQ== -->
 <pre class="r"><code># x = the formula, FUN= should be a function you want to run for each group
-corruption_salience &lt;- aggregate(x = corrupt_salience ~ country , FUN = mean, data = ches )
-corruption_salience</code></pre>
+corruption_salience &lt;- aggregate(x = corrupt_salience ~ country , 
+                                 FUN = mean, 
+                                 data = ches )
+corruption_salience
+</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbImRhdGEuZnJhbWUiXSwibnJvdyI6MjgsIm5jb2wiOjIsInN1bW1hcnkiOnsiRGVzY3JpcHRpb24iOlsiZGYgWzI4IMOXIDJdIl19fSwicmRmIjoiSDRzSUFBQUFBQUFBQmwxVFRXZ1RRUlNlN3VUSHByYkdKbWxTU2F1VW9JSTBFQlFzS0dRT0tvaUNva1lLTFpUTlpqZGR1cGxkOXlkcFBkbVRCNkhnejZVZUJUMVVQQWpTVXhFUFFuc1RFVVFVaXFBZUJBLzE0S0dDalcrU2ZaczJnUy96dlcvbWZXL3k4dWJhdWNtVHNja1lJWVNTRUlYdk1GQVNMdDI0TUQ1QlNFaUNvSWVFU0s5WTUyRTdBUVJFMmc5cnRyWFppaUViVG90TVFBUVFCZXdEaUVUaDNnZllEeEI1QTRBRGdEamdJR0FRSUh5VGdCUmdDSkFHWkFERGZwMFJ3R2pYaFNLR1dsY054M2NhOVZXcHJDS3J6Q0dyQmxyVjlobFZIUXRGTFJCMTIwQlJkNUh4UVBQUWtWcG1rQ043RGxKTjUzalVxYU5ZOW9KODVYYW5PdHJUV1ErVHFDR2pHakowZDdaVERCMm9iZGFRT29iWm9mZ0RxV0lIS3UvYzBXbm9TR3R5WUdaNDgwSGFndFhWM3JCaXlBNTJOK2k1SmlzdTJCS3k0LytUV1NaZFZlK2VmKzhXLzk1OHFpOHZQMlowOU5US3lzcHpkdWhFN1JVY1lNbXpmV1AxWTJVV3oxM2VFdkhncGMrSnBZbnZMRFg5WkVQRXBCSGxiMzlkS1c3L2U3Y3A0cEhoM0NPeHBxZVBid3UvMk91UFlnU0t2NXROVVpSbGF1WXpUZE5ZNXVqTWtaYmYxSTgzWWoxTXh4WnpEeTZ5b1ljZkN1dFptNlcreHBmRXVmVFB4VCtsVW9rTlhkOTZzZnFGczh4bTRkdkxNMG1XdWJleGRtczl5d1pYMSs0TFBWMWIvU1I4eE55S2RaajRuNzF0NFhKTnhiWkl2aGhWVEkrNzlvSWZ4aFhUdGozTG5YRmtRMWU1b25aNTlOcG1JNDgrNGtsSWQ5cVZzdTJEdE5uVjlsaEZkdVc4WmtOS3UvVjc3S0ttNWVvbUJ6TXA0YisvM2NrOWRwY1E5N2dvWGhsWFlQVG14Z3VudS9hcHhhdit1KzN4VzlEdjgrd3VMcld2RWNMTFJuQkdWRjdWT1E1azJKRExhakJ4RlJXZnhRRDBvTldDdkdYckhNYytCcXFUZDAwM0dOS1lZaHFvdEtkdTV6OXdMOElRdFFRQUFBPT0ifQ== -->
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["country"],"name":[1],"type":["fctr"],"align":["left"]},{"label":["corrupt_salience"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"be","2":"2.289256"},{"1":"dk","2":"1.646154"},{"1":"ge","2":"2.389749"},{"1":"gr","2":"6.542411"},{"1":"esp","2":"5.058636"},{"1":"fr","2":"4.035450"},{"1":"irl","2":"4.574074"},{"1":"it","2":"5.340465"},{"1":"nl","2":"2.058120"},{"1":"uk","2":"1.624466"},{"1":"por","2":"7.274554"},{"1":"aus","2":"5.840000"},{"1":"fin","2":"3.343182"},{"1":"sv","2":"1.125000"},{"1":"bul","2":"6.106871"},{"1":"cz","2":"6.037472"},{"1":"est","2":"4.589744"},{"1":"hun","2":"7.753061"},{"1":"lat","2":"5.644360"},{"1":"lith","2":"5.468813"},{"1":"pol","2":"5.978035"},{"1":"rom","2":"5.581973"},{"1":"slo","2":"6.216987"},{"1":"sle","2":"6.136508"},{"1":"cro","2":"4.678454"},{"1":"mal","2":"5.857143"},{"1":"lux","2":"3.000000"},{"1":"cyp","2":"6.250000"}],"options":{"columns":{"min":{},"max":[10],"total":[2]},"rows":{"min":[10],"max":[10],"total":[28]},"pages":{}}}
-  </script>
-</div>
-<!-- rnb-frame-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuTkFcbmBgYCJ9 -->
-<pre class="r"><code>NA</code></pre>
-<!-- rnb-source-end -->
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <div id="dplyr-method" class="section level2">
@@ -2225,13 +2159,15 @@ variable, and then use “summarise” to summarize over members of each
 group.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbInRibF9kZiIsInRibCIsImRhdGEuZnJhbWUiXSwibnJvdyI6MjgsIm5jb2wiOjIsInN1bW1hcnkiOnsiQSB0aWJibGUiOlsiMjggw5cgMiJdfX0sInJkZiI6Ikg0c0lBQUFBQUFBQUJsMVRTMmdUUVJpZTd1WmhVMXRqK2tncWFRMmxxQ0FKMUhvb0tIUU9Lb2lDb2tZS0ZtU3ptVTJIYm1iVGZmVGh5WjQ4Q0FVZmwzb1U5RkR4SUVoUFJUd0k3VTFFRUZFb2d2VWdlS2dIRHhWcy9DZlpmOU51NE52NTV0djV2cG45ODgrMWN4T2ppWWtFSVVRbEVSV2VVYUFrV3J4eElUOUdTRVNCU1J1SmtIWTV6c1ByYmlBZ3FwMHdaaHN2RzNOd3cycnBCTVFBY2NBQmdEVEs5QTdBUVlEMGRRRU9BWktBdzRBVVFPYjJBSG9CZllBMElBUG85L2NaQUF5R0RoUXoyU3d6SFQ5cDBGZVZFa05XbmtaV0NiU0s3VE9WT1RVVWpVRGt0b2tpZDVHSlFQTXdVYTFaZ1VmekhLUUdGN2pVbVVXeDVBVisvVTVyZDR4WHB6dzBxYWFHYXNUazdsUnJNMHhRYmF1SzFER3RGc1VQVkhVN1VFWHJqTTRjUjFyVmdqRFRtdzlzQzdWUWVhT21WbUttWDEwVWh6ekJaenlXNDJVbVhHNXdadWNNeTg0eFRaL0s2WlluWEhzaEhLT2JtdU9FWW1LR3BydHdPa0oyL1liSVV1VXF1M2YrZ3p2KzkrWXp2cno4aEtxRHAxZFdWbDdRSXllcnIyRUI3VG5iTVRSN3ZFU1R3NWUzNVR4MTZVdjMwdGdXN1oxOHVpSG5aQzR1M3YyNk1yN3o3LzJtbkEvMER6K1dZM3J5eEk3TVM3ejVKRHRwL0hlOUxqZWxtYXIxM0RBTW1qbDJPOWZJdS9YanJSeVBxa09Md3c4djByNUhIMGZXc3pidC9aWmNrdXZTUHhmL0ZJdEYybmQ5KytYcVYwRXpteVBmWDUzcG9abjdHMnN6NjFtYVdsMTdJUFYwZGZXenpKSHRMOGQrNHYvMmwwVm9WWVpsVVh3eGppVU0vbmNyWkd1M3Jia0NXdVZsVXU3Q28xNnZielVYUnVxaFNpZkttcXNWREJzc3pXcnZpNHRiTlpkYkFzS1Vidi9tN2pXMzJTRWg2UW01ZVRtdlE5Tk81MGRQaGQ2ck5WRWh6UnZmNW45MXA4K3plN2pTUEVZVUR4dkR0bUNpd2dYYjM0QitjcG5oaGVxQ0dqUktVS2paWE9DRlNZRHFGRnpMRGRvN29Wc21LczFHMi8wUEtPMmZaZThFQUFBPSJ9 -->
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["country"],"name":[1],"type":["fctr"],"align":["left"]},{"label":["poo"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"be","2":"2.289256"},{"1":"dk","2":"1.646154"},{"1":"ge","2":"2.389749"},{"1":"gr","2":"6.542411"},{"1":"esp","2":"5.058636"},{"1":"fr","2":"4.035450"},{"1":"irl","2":"4.574074"},{"1":"it","2":"5.340465"},{"1":"nl","2":"2.058120"},{"1":"uk","2":"1.624466"},{"1":"por","2":"7.274554"},{"1":"aus","2":"5.840000"},{"1":"fin","2":"3.343182"},{"1":"sv","2":"1.125000"},{"1":"bul","2":"6.106871"},{"1":"cz","2":"6.037472"},{"1":"est","2":"4.589744"},{"1":"hun","2":"7.753061"},{"1":"lat","2":"5.644360"},{"1":"lith","2":"5.468813"},{"1":"pol","2":"5.978035"},{"1":"rom","2":"5.581973"},{"1":"slo","2":"6.216987"},{"1":"sle","2":"6.136508"},{"1":"cro","2":"4.678454"},{"1":"mal","2":"5.857143"},{"1":"lux","2":"3.000000"},{"1":"cyp","2":"6.250000"}],"options":{"columns":{"min":{},"max":[10],"total":[2]},"rows":{"min":[10],"max":[10],"total":[28]},"pages":{}}}
-  </script>
-</div>
-<!-- rnb-frame-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG48IS0tIHJuYi1zb3VyY2UtYmVnaW4gZXlKa1lYUmhJam9pWUdCZ2NseHViR2xpY21GeWVTaGtjR3g1Y2lrZ0l5QnBaaUI1YjNVZ2FHRjJaVzRuZENCaGJISmxZV1I1SUd4dllXUmxaQ0JrY0d4NWNseHVibVYzZEdGaWJHVThMV05vWlhOOFBseHVJQ0JuY205MWNGOWllU2hqYjNWdWRISjVLWHcrWEc0Z0lITjFiVzFoY21selpTaHdiMjg5SUcxbFlXNG9ZMjl5Y25Wd2RGOXpZV3hwWlc1alpTa3BYRzVjYmx4dVhHNWdZR0FpZlE9PSAtLT5cblxuYGBgclxubGlicmFyeShkcGx5cikgIyBpZiB5b3UgaGF2ZW4ndCBhbHJlYWR5IGxvYWRlZCBkcGx5clxubmV3dGFibGU8LWNoZXN8PlxuICBncm91cF9ieShjb3VudHJ5KXw+XG4gIHN1bW1hcmlzZShwb289IG1lYW4oY29ycnVwdF9zYWxpZW5jZSkpXG5cblxuXG5gYGBcblxuPCEtLSBybmItc291cmNlLWVuZCAtLT5cbiJ9 -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShkcGx5cikgIyBpZiB5b3UgaGF2ZW4ndCBhbHJlYWR5IGxvYWRlZCBkcGx5clxubmV3dGFibGU8LWNoZXN8PlxuICBncm91cF9ieShjb3VudHJ5KXw+XG4gIHN1bW1hcmlzZShwb289IG1lYW4oY29ycnVwdF9zYWxpZW5jZSkpXG5cblxuXG5gYGAifQ== -->
+<pre class="r"><code>library(dplyr) # if you haven&#39;t already loaded dplyr
+newtable&lt;-ches|&gt;
+  group_by(country)|&gt;
+  summarise(poo= mean(corrupt_salience))
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>Going forward, we’ll mostly use the <code>dplyr</code> commands for
@@ -2246,10 +2182,12 @@ to get each party family’s average position on redistribution
 issues.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG48IS0tIHJuYi1zb3VyY2UtYmVnaW4gZXlKa1lYUmhJam9pWUdCZ2NseHVJeUI1YjNWeUlHTnZaR1VnYUdWeVpTNHVMaTVjYmx4dVhHNWdZR0FpZlE9PSAtLT5cblxuYGBgclxuIyB5b3VyIGNvZGUgaGVyZS4uLi5cblxuXG5gYGBcblxuPCEtLSBybmItc291cmNlLWVuZCAtLT5cbiJ9 -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyB5b3VyIGNvZGUgaGVyZS4uLi5cblxuXG5gYGAifQ== -->
 <pre class="r"><code># your code here....
 </code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <div id="functions" class="section level2">
@@ -2261,6 +2199,7 @@ function to apply it to more general cases.</p>
 parties by vote share:</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG48IS0tIHJuYi1zb3VyY2UtYmVnaW4gZXlKa1lYUmhJam9pWUdCZ2NseHVJeUIwYUdseklHZHBkbVZ6SUhKdmR5QnVkVzFpWlhJZ1ptOXlJSFJvWlNCb2FXZG9aWE4wSUhSdklHeHZkMlZ6ZENCMllXeDFaVnh1ZEc5d1gyNDhMVzl5WkdWeUtHTm9aWE1rZG05MFpTd2daR1ZqY21WaGMybHVaejFVS1ZzeE9qRXdYU0JjYmx4dUl5QjBhR2x6SUhOMVluTmxkSE1nZEdobElIWmhiSFZsY3lCdlppQndZWEowZVNCaWVTQjBhR1VnYVc1a1pYZ2dhVzRnZEc5d1gyNDZYRzVjYm1Ob1pYTWtjR0Z5ZEhsYmRHOXdYMjVkWEc1Y2JseHVZR0JnSW4wPSAtLT5cblxuYGBgclxuIyB0aGlzIGdpdmVzIHJvdyBudW1iZXIgZm9yIHRoZSBoaWdoZXN0IHRvIGxvd2VzdCB2YWx1ZVxudG9wX248LW9yZGVyKGNoZXMkdm90ZSwgZGVjcmVhc2luZz1UKVsxOjEwXSBcblxuIyB0aGlzIHN1YnNldHMgdGhlIHZhbHVlcyBvZiBwYXJ0eSBieSB0aGUgaW5kZXggaW4gdG9wX246XG5cbmNoZXMkcGFydHlbdG9wX25dXG5cblxuYGBgXG5cbjwhLS0gcm5iLXNvdXJjZS1lbmQgLS0+XG4ifQ== -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyB0aGlzIGdpdmVzIHJvdyBudW1iZXIgZm9yIHRoZSBoaWdoZXN0IHRvIGxvd2VzdCB2YWx1ZVxudG9wX248LW9yZGVyKGNoZXMkdm90ZSwgZGVjcmVhc2luZz1UKVsxOjEwXSBcblxuIyB0aGlzIHN1YnNldHMgdGhlIHZhbHVlcyBvZiBwYXJ0eSBieSB0aGUgaW5kZXggaW4gdG9wX246XG5cbmNoZXMkcGFydHlbdG9wX25dXG5cblxuYGBgIn0= -->
 <pre class="r"><code># this gives row number for the highest to lowest value
 top_n&lt;-order(ches$vote, decreasing=T)[1:10] 
@@ -2270,12 +2209,14 @@ top_n&lt;-order(ches$vote, decreasing=T)[1:10]
 ches$party[top_n]
 </code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>I could probably make this more generalized by creating a
 function.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG48IS0tIHJuYi1zb3VyY2UtYmVnaW4gZXlKa1lYUmhJam9pWUdCZ2NseHVYRzUwYjNCdVJuVnVZM1JwYjI0Z1BDMGdablZ1WTNScGIyNG9iR0ZpWld4ekxDQjJZV3gxWlhNc0lHNHBleUFqSUhSb1pTQmhjbWQxYldWdWRITWdYRzRnSUhSdmNGOXVJRHd0SUc5eVpHVnlLSFpoYkhWbGN5d2daR1ZqY21WaGMybHVaejBnVkNsYk1UcHVYU0FqSUhSb1pTQnpkV0p6WlhSY2JpQWdjbVZ6ZFd4MFBDMXNZV0psYkhOYmRHOXdYMjVkSUNNZ2RHaGxJSEpsYzNWc2RDQWdYRzRnSUhKbGRIVnliaWh5WlhOMWJIUXBJQ01nZEdobElISmxkSFZ5YmlCemRHRjBaVzFsYm5SY2JpQWdYRzU5WEc1Y2JseHVZR0JnSW4wPSAtLT5cblxuYGBgclxuXG50b3BuRnVuY3Rpb24gPC0gZnVuY3Rpb24obGFiZWxzLCB2YWx1ZXMsIG4peyAjIHRoZSBhcmd1bWVudHMgXG4gIHRvcF9uIDwtIG9yZGVyKHZhbHVlcywgZGVjcmVhc2luZz0gVClbMTpuXSAjIHRoZSBzdWJzZXRcbiAgcmVzdWx0PC1sYWJlbHNbdG9wX25dICMgdGhlIHJlc3VsdCAgXG4gIHJldHVybihyZXN1bHQpICMgdGhlIHJldHVybiBzdGF0ZW1lbnRcbiAgXG59XG5cblxuYGBgXG5cbjwhLS0gcm5iLXNvdXJjZS1lbmQgLS0+XG4ifQ== -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG50b3BuRnVuY3Rpb24gPC0gZnVuY3Rpb24obGFiZWxzLCB2YWx1ZXMsIG4peyAjIHRoZSBhcmd1bWVudHMgXG4gIHRvcF9uIDwtIG9yZGVyKHZhbHVlcywgZGVjcmVhc2luZz0gVClbMTpuXSAjIHRoZSBzdWJzZXRcbiAgcmVzdWx0PC1sYWJlbHNbdG9wX25dICMgdGhlIHJlc3VsdCAgXG4gIHJldHVybihyZXN1bHQpICMgdGhlIHJldHVybiBzdGF0ZW1lbnRcbiAgXG59XG5cblxuYGBgIn0= -->
 <pre class="r"><code>
 topnFunction &lt;- function(labels, values, n){ # the arguments 
@@ -2286,6 +2227,7 @@ topnFunction &lt;- function(labels, values, n){ # the arguments
 }
 </code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>Now I can use this in a bunch of different scenarios. Maybe I want to
@@ -2293,20 +2235,24 @@ get the top parties by seat share instead of vote share, then all I need
 to do is change the <code>values</code> argument:</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG48IS0tIHJuYi1zb3VyY2UtYmVnaW4gZXlKa1lYUmhJam9pWUdCZ2NseHVkRzl3YmtaMWJtTjBhVzl1S0dOb1pYTWtjR0Z5ZEhrc0lHTm9aWE1rYzJWaGRDd2diajB4TUNsY2JseHVYRzVnWUdBaWZRPT0gLS0+XG5cbmBgYHJcbnRvcG5GdW5jdGlvbihjaGVzJHBhcnR5LCBjaGVzJHNlYXQsIG49MTApXG5cblxuYGBgXG5cbjwhLS0gcm5iLXNvdXJjZS1lbmQgLS0+XG4ifQ== -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudG9wbkZ1bmN0aW9uKGNoZXMkcGFydHksIGNoZXMkc2VhdCwgbj0xMClcblxuXG5gYGAifQ== -->
 <pre class="r"><code>topnFunction(ches$party, ches$seat, n=10)
 </code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>Or I can get more observations by changing <code>n</code></p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG48IS0tIHJuYi1zb3VyY2UtYmVnaW4gZXlKa1lYUmhJam9pWUdCZ2NseHVYRzUwYjNCdVJuVnVZM1JwYjI0b1kyaGxjeVJ3WVhKMGVTd2dZMmhsY3lSelpXRjBMQ0J1UFRFMUtWeHVYRzVjYmx4dVlHQmdJbjA9IC0tPlxuXG5gYGByXG5cbnRvcG5GdW5jdGlvbihjaGVzJHBhcnR5LCBjaGVzJHNlYXQsIG49MTUpXG5cblxuXG5gYGBcblxuPCEtLSBybmItc291cmNlLWVuZCAtLT5cbiJ9 -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG50b3BuRnVuY3Rpb24oY2hlcyRwYXJ0eSwgY2hlcyRzZWF0LCBuPTE1KVxuXG5cblxuYGBgIn0= -->
 <pre class="r"><code>
 topnFunction(ches$party, ches$seat, n=15)
 </code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 </div>
@@ -2317,10 +2263,12 @@ topnFunction(ches$party, ches$seat, n=15)
 and the values themselves?</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG48IS0tIHJuYi1zb3VyY2UtYmVnaW4gZXlKa1lYUmhJam9pWUdCZ2NseHVJeTR1TG5sdmRYSWdZMjlrWlNCb1pYSmxYRzVjYmx4dVhHNWdZR0FpZlE9PSAtLT5cblxuYGBgclxuIy4uLnlvdXIgY29kZSBoZXJlXG5cblxuXG5gYGBcblxuPCEtLSBybmItc291cmNlLWVuZCAtLT5cbiJ9 -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIy4uLnlvdXIgY29kZSBoZXJlXG5cblxuXG5gYGAifQ== -->
 <pre class="r"><code>#...your code here
 </code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 </div>
 
